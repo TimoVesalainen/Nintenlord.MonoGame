@@ -26,6 +26,15 @@ namespace Nintenlord.MonoGame.Graphics.Sprites
                 batch.Draw(texture, item.Value, sheet[item.Key], color);
             }
         }
+        public static void Draw<T>(this SpriteBatch batch, ITextureSheet<T> sheet, IEnumerable<(T item, Vector2 position)> items, Color color)
+        {
+            var texture = sheet.Sheet;
+
+            foreach (var item in items)
+            {
+                batch.Draw(texture, item.position, sheet[item.item], color);
+            }
+        }
         public static void Draw<T>(this SpriteBatch batch, ITextureSheet<T> sheet, T item, Vector2 position, Color color)
         {
             batch.Draw(sheet.Sheet, position, sheet[item], color);
