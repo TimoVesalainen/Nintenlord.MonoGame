@@ -85,6 +85,7 @@ namespace Nintenlord.MonoGame.Graphics.Textures
 
                 rect.Width = texture.Width / width;
                 rect.Height = texture.Height / height;
+                int rectPixelCount = rect.Width * rect.Height;
 
                 for (int y = 0; y < height; y++)
                 {
@@ -107,12 +108,11 @@ namespace Nintenlord.MonoGame.Graphics.Textures
                             blue += pixel.B;
                             alpha += pixel.A;
                         }
-                        int pixelCount = rect.Width * rect.Height;
                         array2[index] = new Color(
-                            red / pixelCount,
-                            green / pixelCount,
-                            blue / pixelCount,
-                            alpha / pixelCount);
+                            red / rectPixelCount,
+                            green / rectPixelCount,
+                            blue / rectPixelCount,
+                            alpha / rectPixelCount);
                     }
                 }
 
