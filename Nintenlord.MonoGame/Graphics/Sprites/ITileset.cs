@@ -16,9 +16,13 @@ namespace Nintenlord.MonoGame.Graphics.Sprites
 
     public static class TilesetHelpers
     {
-        public static Vector2 TileSize<T>(this ITileset<T> tileset)
+        public static Vector2 TileSizeV<T>(this ITileset<T> tileset)
         {
             return new Vector2(tileset.TileWidth, tileset.TileHeight);
+        }
+        public static Point TileSize<T>(this ITileset<T> tileset)
+        {
+            return new Point(tileset.TileWidth, tileset.TileHeight);
         }
 
         public static ITileset<T> CastToTileset<T>(this ITextureSheet<T> tileset)
