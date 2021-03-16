@@ -57,7 +57,7 @@ namespace Nintenlord.MonoGame.Input.Mouse
         public override void Initialize()
         {
             base.Initialize();
-            center = new Point(400, 300);//TODO: replace with dynamic value
+            center = this.Game.Window.ClientBounds.Center;
             if (IsFixedToCenter)
             {
                 SetToCenter();
