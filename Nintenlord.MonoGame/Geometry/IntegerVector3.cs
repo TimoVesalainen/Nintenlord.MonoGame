@@ -460,14 +460,7 @@ namespace Nintenlord.MonoGame.Geometry
 
         public override bool Equals(object obj)
         {
-            if (obj is IntegerVector3)
-            {
-                return this == (IntegerVector3)obj;
-            }
-            else
-            {
-                return false;
-            }
+            return obj is IntegerVector3 vector && this == vector;
         }
 
         #region IEquatable<IntegerVector3> Members
