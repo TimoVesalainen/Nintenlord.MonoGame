@@ -447,7 +447,7 @@ namespace Nintenlord.MonoGame.Geometry
 
         public override int GetHashCode()
         {
-            const int mask = 0x3F;
+            const int mask = 0x3FF;
             const int shift = 10;
 
             return X & mask | (Y & mask) << shift | (Z & mask) << shift * 2;
