@@ -67,6 +67,7 @@ namespace Nintenlord.MonoGame.Input.Mouse
         public override void Update(GameTime gameTime)
         {
             MouseState currentMousestate = GameMouse.GetState();
+            center = this.Game.Window.ClientBounds.Center;
 
             if (IsFixedToCenter)
             {
