@@ -62,6 +62,13 @@ namespace Nintenlord.MonoGame.Geometry
                 Z >= start.Z && Z < end.Z;
         }
 
+        public void Deconstruct(out int x, out int y, out int z)
+        {
+            x = X;
+            y = Y;
+            z = Z;
+        }
+
         #region Static operators
 
         public static IntegerVector3 Sign(IntegerVector3 a)
@@ -444,6 +451,25 @@ namespace Nintenlord.MonoGame.Geometry
             return new IntegerVector3(a.X, a.Y, 0);
         }
 
+        public static implicit operator IntegerVector3((int x, int y, int z) tuple)
+        {
+            return new IntegerVector3(tuple.x, tuple.y, tuple.z);
+        }
+
+        public static implicit operator IntegerVector3(Tuple<int, int, int> tuple)
+        {
+            return new IntegerVector3(tuple.Item1, tuple.Item2, tuple.Item3);
+        }
+
+        public static implicit operator (int x, int y, int z)(IntegerVector3 vector)
+        {
+            return (vector.X, vector.Y, vector.Z);
+        }
+
+        public static implicit operator Tuple<int, int, int>(IntegerVector3 vector)
+        {
+            return Tuple.Create(vector.X, vector.Y, vector.Z);
+        }
 
         public override int GetHashCode()
         {
