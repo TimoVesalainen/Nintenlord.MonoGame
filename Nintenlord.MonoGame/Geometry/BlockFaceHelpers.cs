@@ -199,52 +199,63 @@ namespace Nintenlord.MonoGame.Geometry
 
         public static IEnumerable<Plane> GetFacePlanes(this BoundingBox box, BlockFace faces)
         {
+            return box.GetFaceRectangles(faces).Select(vectors => new Plane(vectors[0], vectors[1], vectors[2]));
+        }
+
+        public static IEnumerable<Vector3[]> GetFaceRectangles(this BoundingBox box, BlockFace faces)
+        {
             if (faces.HasFlag(BlockFace.Down))
             {
                 Vector3 corner1 = box.Min;
                 var corner2 = new Vector3(box.Min.X, box.Max.Y, box.Min.Z);
-                var corner3 = new Vector3(box.Max.X, box.Min.Y, box.Min.Z);
-                yield return new Plane(corner1, corner2, corner3);
+                var corner3 = new Vector3(box.Max.X, box.Max.Y, box.Min.Z);
+                var corner4 = new Vector3(box.Max.X, box.Min.Y, box.Min.Z);
+                yield return new[] { corner1, corner2, corner3, corner4 };
             }
 
             if (faces.HasFlag(BlockFace.Up))
             {
                 Vector3 corner1 = box.Max;
                 var corner2 = new Vector3(box.Min.X, box.Max.Y, box.Max.Z);
-                var corner3 = new Vector3(box.Max.X, box.Min.Y, box.Max.Z);
-                yield return new Plane(corner1, corner2, corner3);
+                var corner3 = new Vector3(box.Max.X, box.Max.Y, box.Max.Z);
+                var corner4 = new Vector3(box.Max.X, box.Min.Y, box.Max.Z);
+                yield return new[] { corner1, corner2, corner3, corner4 };
             }
 
             if (faces.HasFlag(BlockFace.East))
             {
                 Vector3 corner1 = box.Max;
-                var corner2 = new Vector3(box.Max.X, box.Max.Y, box.Min.Z);
-                var corner3 = new Vector3(box.Max.X, box.Min.Y, box.Max.Z);
-                yield return new Plane(corner1, corner2, corner3);
+                var corner2 = new Vector3(box.Max.X, box.Min.Y, box.Max.Z);
+                var corner3 = new Vector3(box.Max.X, box.Min.Y, box.Min.Z);
+                var corner4 = new Vector3(box.Max.X, box.Max.Y, box.Min.Z);
+                yield return new [] { corner1, corner2, corner3, corner4 };
             }
 
             if (faces.HasFlag(BlockFace.West))
             {
                 Vector3 corner1 = box.Min;
-                var corner2 = new Vector3(box.Min.X, box.Max.Y, box.Min.Z);
-                var corner3 = new Vector3(box.Min.X, box.Min.Y, box.Max.Z);
-                yield return new Plane(corner1, corner2, corner3);
+                var corner2 = new Vector3(box.Min.X, box.Min.Y, box.Max.Z);
+                var corner3 = new Vector3(box.Min.X, box.Min.Y, box.Min.Z);
+                var corner4 = new Vector3(box.Min.X, box.Max.Y, box.Min.Z);
+                yield return new [] { corner1, corner2, corner3, corner4 };
             }
 
             if (faces.HasFlag(BlockFace.North))
             {
                 Vector3 corner1 = box.Max;
                 var corner2 = new Vector3(box.Max.X, box.Max.Y, box.Min.Z);
-                var corner3 = new Vector3(box.Min.X, box.Max.Y, box.Max.Z);
-                yield return new Plane(corner1, corner2, corner3);
+                var corner3 = new Vector3(box.Min.X, box.Max.Y, box.Min.Z);
+                var corner4 = new Vector3(box.Min.X, box.Max.Y, box.Max.Z);
+                yield return new [] { corner1, corner2, corner3, corner4 };
             }
 
             if (faces.HasFlag(BlockFace.South))
             {
                 Vector3 corner1 = box.Min;
                 var corner2 = new Vector3(box.Max.X, box.Min.Y, box.Min.Z);
-                var corner3 = new Vector3(box.Min.X, box.Min.Y, box.Max.Z);
-                yield return new Plane(corner1, corner2, corner3);
+                var corner3 = new Vector3(box.Min.X, box.Min.Y, box.Min.Z);
+                var corner4 = new Vector3(box.Min.X, box.Min.Y, box.Max.Z);
+                yield return new[] { corner1, corner2, corner3, corner4 };
             }
         }
 
