@@ -32,10 +32,7 @@ namespace Nintenlord.MonoGame.Utility
 
         private void OnTimeDone()
         {
-            if (TimeDone != null)
-            {
-                TimeDone(this, EventArgs.Empty);
-            }
+            TimeDone?.Invoke(this, EventArgs.Empty);
         }
 
         public override void Update(GameTime gameTime)

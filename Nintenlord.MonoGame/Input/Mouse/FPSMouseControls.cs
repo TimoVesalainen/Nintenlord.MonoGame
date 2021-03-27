@@ -15,6 +15,8 @@ namespace Nintenlord.MonoGame.Input.Mouse
         public int ChangeWheel { get; private set; }
         public bool LeftPressed { get; private set; }
         public bool RightPressed { get; private set; }
+        public bool LeftLifted { get; private set; }
+        public bool RightLifted { get; private set; }
 
         public bool IsFixedToCenter
         {
@@ -88,6 +90,12 @@ namespace Nintenlord.MonoGame.Input.Mouse
 
             RightPressed = currentMousestate.RightButton == ButtonState.Pressed &&
                            previousState.RightButton == ButtonState.Released;
+
+            LeftLifted = currentMousestate.LeftButton == ButtonState.Released &&
+                          previousState.LeftButton == ButtonState.Pressed;
+
+            RightLifted = currentMousestate.RightButton == ButtonState.Released &&
+                           previousState.RightButton == ButtonState.Pressed;
 
             previousState = currentMousestate;
         }
