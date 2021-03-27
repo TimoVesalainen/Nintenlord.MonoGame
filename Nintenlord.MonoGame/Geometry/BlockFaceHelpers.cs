@@ -217,7 +217,7 @@ namespace Nintenlord.MonoGame.Geometry
             {
                 Vector3 corner1 = box.Max;
                 var corner2 = new Vector3(box.Min.X, box.Max.Y, box.Max.Z);
-                var corner3 = new Vector3(box.Max.X, box.Max.Y, box.Max.Z);
+                var corner3 = new Vector3(box.Min.X, box.Min.Y, box.Max.Z);
                 var corner4 = new Vector3(box.Max.X, box.Min.Y, box.Max.Z);
                 yield return new[] { corner1, corner2, corner3, corner4 };
             }
@@ -235,7 +235,7 @@ namespace Nintenlord.MonoGame.Geometry
             {
                 Vector3 corner1 = box.Min;
                 var corner2 = new Vector3(box.Min.X, box.Min.Y, box.Max.Z);
-                var corner3 = new Vector3(box.Min.X, box.Min.Y, box.Min.Z);
+                var corner3 = new Vector3(box.Min.X, box.Max.Y, box.Max.Z);
                 var corner4 = new Vector3(box.Min.X, box.Max.Y, box.Min.Z);
                 yield return new [] { corner1, corner2, corner3, corner4 };
             }
@@ -253,7 +253,7 @@ namespace Nintenlord.MonoGame.Geometry
             {
                 Vector3 corner1 = box.Min;
                 var corner2 = new Vector3(box.Max.X, box.Min.Y, box.Min.Z);
-                var corner3 = new Vector3(box.Min.X, box.Min.Y, box.Min.Z);
+                var corner3 = new Vector3(box.Max.X, box.Min.Y, box.Max.Z);
                 var corner4 = new Vector3(box.Min.X, box.Min.Y, box.Max.Z);
                 yield return new[] { corner1, corner2, corner3, corner4 };
             }
