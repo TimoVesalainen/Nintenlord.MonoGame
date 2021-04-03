@@ -43,7 +43,11 @@ namespace Nintenlord.MonoGame.Geometry
                     yield return new IntegerVector3(x, y, minZ);
                 }
             }
-            
+        }
+
+        public static Vector3 GetCenter(this BoundingBox box)
+        {
+            return (box.Max + box.Min) / 2;
         }
     }
 }
