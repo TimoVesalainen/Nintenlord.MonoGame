@@ -36,9 +36,9 @@ namespace Nintenlord.MonoGame.Geometry
             var maxY = (int)Math.Ceiling(box.Max.Y);
             var minZ = (int)box.Min.Z;
 
-            for (int y = minY; y <= maxY; y++)
+            for (int y = minY; y < maxY; y++)
             {
-                for (int x = minX; x <= maxX; x++)
+                for (int x = minX; x < maxX; x++)
                 {
                     yield return new IntegerVector3(x, y, minZ);
                 }
