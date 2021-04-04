@@ -31,26 +31,9 @@ namespace Nintenlord.MonoGame.Geometry
             bool yCausesIntersection = !yIntersectPast && yIntersectPresent;
             bool zCausesIntersection = !zIntersectPast && zIntersectPresent;
 
-            float xRatio = float.NegativeInfinity;
-            if (xCausesIntersection)
-            {
-                var xMaxMovement = ClipLine(original.Min.X, original.Max.X, futureCollidingSolid.Min.X, futureCollidingSolid.Max.X, movement.X);
-                xRatio = xMaxMovement / movement.X;
-            }
-
-            float yRatio = float.NegativeInfinity;
-            if (yCausesIntersection)
-            {
-                var yMaxMovement = ClipLine(original.Min.Y, original.Max.Y, futureCollidingSolid.Min.Y, futureCollidingSolid.Max.Y, movement.Y);
-                yRatio = yMaxMovement / movement.Y;
-            }
-
-            float zRatio = float.NegativeInfinity;
-            if (zCausesIntersection)
-            {
-                var zMaxMovement = ClipLine(original.Min.Z, original.Max.Z, futureCollidingSolid.Min.Z, futureCollidingSolid.Max.Z, movement.Z);
-                zRatio = zMaxMovement / movement.Z;
-            }
+            float xRatio = GetRatio(original.Min.X, original.Max.X, futureCollidingSolid.Min.X, futureCollidingSolid.Max.X, movement.X, xCausesIntersection);
+            float yRatio = GetRatio(original.Min.Y, original.Max.Y, futureCollidingSolid.Min.Y, futureCollidingSolid.Max.Y, movement.Y, yCausesIntersection);
+            float zRatio = GetRatio(original.Min.Z, original.Max.Z, futureCollidingSolid.Min.Z, futureCollidingSolid.Max.Z, movement.Z, zCausesIntersection);
 
             var ratioOfMovement = Math.Max(Math.Max(xRatio, yRatio), zRatio);
 
@@ -84,6 +67,19 @@ namespace Nintenlord.MonoGame.Geometry
             else
             {
                 return valueMin <= min && valueMax >= max;
+            }
+        }
+
+        private static float GetRatio(float valueMin, float valueMax, float min, float max, float movement, bool causedIntersection)
+        {
+            if (causedIntersection)
+            {
+                var maxMovement = ClipLine(valueMin, valueMax, min, max, movement);
+                return maxMovement / movement;
+            }
+            else
+            {
+                return float.NegativeInfinity;
             }
         }
 
