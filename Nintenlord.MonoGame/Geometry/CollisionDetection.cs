@@ -93,8 +93,6 @@ namespace Nintenlord.MonoGame.Geometry
             {
                 throw new ArgumentException("max < min");
             }
-            var newMax = valueMax + movement;
-            var newMin = valueMin + movement;
 
             if (movement < 0)
             {
