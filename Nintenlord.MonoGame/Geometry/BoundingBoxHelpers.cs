@@ -16,11 +16,11 @@ namespace Nintenlord.MonoGame.Geometry
             var minZ = (int)box.Min.Z;
             var maxZ = (int)Math.Ceiling(box.Max.Z);
 
-            for (int z = minZ; z <= maxZ; z++)
+            for (int z = minZ; z < maxZ; z++)
             {
-                for (int y = minY; y <= maxY; y++)
+                for (int y = minY; y < maxY; y++)
                 {
-                    for (int x = minX; x <= maxX; x++)
+                    for (int x = minX; x < maxX; x++)
                     {
                         yield return new IntegerVector3(x, y, z);
                     }
