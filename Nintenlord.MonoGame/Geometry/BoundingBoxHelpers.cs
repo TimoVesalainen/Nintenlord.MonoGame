@@ -49,5 +49,11 @@ namespace Nintenlord.MonoGame.Geometry
         {
             return (box.Max + box.Min) / 2;
         }
+
+        public static BoundingBox Translate(this BoundingBox box, Vector3 translate)
+        {
+            BoundingBox newBox = new BoundingBox(box.Min + translate, box.Max + translate);
+            return newBox;
+        }
     }
 }
