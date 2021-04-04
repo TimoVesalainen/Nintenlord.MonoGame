@@ -10,7 +10,7 @@ namespace Nintenlord.MonoGame.Geometry
 
         //Ray x BBox
 
-        //Line x Box 
+        //Line x BBox
 
         //Ray x Triangle
 
@@ -23,6 +23,7 @@ namespace Nintenlord.MonoGame.Geometry
             bool xIntersectPast = Intersects(original.Min.X, original.Max.X, futureCollidingSolid.Min.X, futureCollidingSolid.Max.X);
             bool yIntersectPast = Intersects(original.Min.Y, original.Max.Y, futureCollidingSolid.Min.Y, futureCollidingSolid.Max.Y);
             bool zIntersectPast = Intersects(original.Min.Z, original.Max.Z, futureCollidingSolid.Min.Z, futureCollidingSolid.Max.Z);
+
             bool xIntersectPresent = Intersects(original.Min.X + movement.X, original.Max.X + movement.X, futureCollidingSolid.Min.X, futureCollidingSolid.Max.X);
             bool yIntersectPresent = Intersects(original.Min.Y + movement.Y, original.Max.Y + movement.Y, futureCollidingSolid.Min.Y, futureCollidingSolid.Max.Y);
             bool zIntersectPresent = Intersects(original.Min.Z + movement.Z, original.Max.Z + movement.Z, futureCollidingSolid.Min.Z, futureCollidingSolid.Max.Z);
