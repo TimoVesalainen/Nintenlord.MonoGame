@@ -9,11 +9,11 @@ namespace Nintenlord.MonoGame.Geometry
     {
         public static IEnumerable<IntegerVector3> GetIntersectingUnitBoxes(this BoundingBox box)
         {
-            var minX = (int)box.Min.X;
+            var minX = (int)Math.Floor(box.Min.X);
             var maxX = (int)Math.Ceiling(box.Max.X);
-            var minY = (int)box.Min.Y;
+            var minY = (int)Math.Floor(box.Min.Y);
             var maxY = (int)Math.Ceiling(box.Max.Y);
-            var minZ = (int)box.Min.Z;
+            var minZ = (int)Math.Floor(box.Min.Z);
             var maxZ = (int)Math.Ceiling(box.Max.Z);
 
             for (int z = minZ; z < maxZ; z++)
@@ -30,11 +30,11 @@ namespace Nintenlord.MonoGame.Geometry
 
         public static IEnumerable<IntegerVector3> GetBottomUnitBoxes(this BoundingBox box)
         {
-            var minX = (int)box.Min.X;
+            var minX = (int)Math.Floor(box.Min.X);
             var maxX = (int)Math.Ceiling(box.Max.X);
-            var minY = (int)box.Min.Y;
+            var minY = (int)Math.Floor(box.Min.Y);
             var maxY = (int)Math.Ceiling(box.Max.Y);
-            var minZ = (int)box.Min.Z;
+            var minZ = (int)Math.Floor(box.Min.Z);
 
             for (int y = minY; y < maxY; y++)
             {
