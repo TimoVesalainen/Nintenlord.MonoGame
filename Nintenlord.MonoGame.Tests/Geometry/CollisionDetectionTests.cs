@@ -1,7 +1,4 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Nintenlord.MonoGame.Geometry;
 using Microsoft.Xna.Framework;
 
@@ -15,7 +12,7 @@ namespace Nintenlord.MonoGame.Tests.Geometry
         [TestCase(0.9f)]
         [TestCase(1.0f)]
         [TestCase(1.1f)]
-        public void ClipLineNegative(float movement)
+        public void ClipLineLeft(float movement)
         {
             float toMove;
 
@@ -37,7 +34,7 @@ namespace Nintenlord.MonoGame.Tests.Geometry
         [TestCase(-0.9f)]
         [TestCase(-1.0f)]
         [TestCase(-1.1f)]
-        public void ClipLinePositive(float movement)
+        public void ClipLineRight(float movement)
         {
             float toMove;
 
@@ -51,6 +48,50 @@ namespace Nintenlord.MonoGame.Tests.Geometry
             }
 
             Assert.AreEqual(toMove, CollisionDetection.ClipLine(1, 2, 0, 1, movement), 0.001);
+        }
+
+        [TestCase(0)]
+        [TestCase(0.1f)]
+        [TestCase(-0.1f)]
+        [TestCase(0.9f)]
+        [TestCase(1.0f)]
+        [TestCase(1.1f)]
+        public void ClipLineLeftNegative(float movement)
+        {
+            float toMove;
+
+            if (movement > 0)
+            {
+                toMove = 0;
+            }
+            else
+            {
+                toMove = movement;
+            }
+
+            Assert.AreEqual(toMove, CollisionDetection.ClipLine(-3, -2, -2, -1, movement), 0.001);
+        }
+
+        [TestCase(0)]
+        [TestCase(-0.1f)]
+        [TestCase(0.1f)]
+        [TestCase(-0.9f)]
+        [TestCase(-1.0f)]
+        [TestCase(-1.1f)]
+        public void ClipLineRightNegative(float movement)
+        {
+            float toMove;
+
+            if (movement < 0)
+            {
+                toMove = 0;
+            }
+            else
+            {
+                toMove = movement;
+            }
+
+            Assert.AreEqual(toMove, CollisionDetection.ClipLine(-2, -1, -3, -2, movement), 0.001);
         }
 
         [TestCase(0)]
@@ -228,14 +269,160 @@ namespace Nintenlord.MonoGame.Tests.Geometry
             TestMovementTo(amount, -Vector3.One);
         }
 
-        private static void TestMovementTo(float amount, Vector3 direction)
+        [TestCase(-0.1f)]
+        [TestCase(0.0f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedUnitXNegative(float amount)
         {
+            TestMovementTo(amount, Vector3.UnitX, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(-0.1f)]
+        [TestCase(0.0f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedUnitYNegative(float amount)
+        {
+            TestMovementTo(amount, Vector3.UnitY, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedUnitZNegative(float amount)
+        {
+            TestMovementTo(amount, Vector3.UnitZ, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(-0.1f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedXYNegative(float amount)
+        {
+            TestMovementTo(amount, Vector3.UnitX + Vector3.UnitY, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(-0.1f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedXZNegative(float amount)
+        {
+            TestMovementTo(amount, Vector3.UnitX + Vector3.UnitZ, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(-0.1f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedYZNegative(float amount)
+        {
+            TestMovementTo(amount, Vector3.UnitY + Vector3.UnitZ, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(-0.1f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedXYZNegative(float amount)
+        {
+            TestMovementTo(amount, Vector3.One, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(-0.1f)]
+        [TestCase(0.0f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedMinusUnitXNegative(float amount)
+        {
+            TestMovementTo(amount, -Vector3.UnitX, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(-0.1f)]
+        [TestCase(0.0f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedMinusUnitYNegative(float amount)
+        {
+            TestMovementTo(amount, -Vector3.UnitY, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(-0.1f)]
+        [TestCase(0.0f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedMinusUnitZNegative(float amount)
+        {
+            TestMovementTo(amount, -Vector3.UnitZ, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(-0.1f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedMinusXYNegative(float amount)
+        {
+            TestMovementTo(amount, -Vector3.UnitX - Vector3.UnitY, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(-0.1f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedMinusXZNegative(float amount)
+        {
+            TestMovementTo(amount, -Vector3.UnitX - Vector3.UnitZ, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(-0.1f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedMinusYZNegative(float amount)
+        {
+            TestMovementTo(amount, -Vector3.UnitY - Vector3.UnitZ, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        [TestCase(-0.1f)]
+        [TestCase(0.1f)]
+        [TestCase(0.5f)]
+        [TestCase(0.9f)]
+        [TestCase(1f)]
+        public void ClipMovementMovedMinusXYZNegative(float amount)
+        {
+            TestMovementTo(amount, -Vector3.One, originMaybe: new Vector3(-5, -5, 5));
+        }
+
+        private static void TestMovementTo(float amount, Vector3 direction, Vector3? sizeMaybe = null, Vector3? originMaybe = null)
+        {
+            Vector3 origin = originMaybe ?? Vector3.Zero;
+            Vector3 size = sizeMaybe ?? Vector3.One;
             bool shouldChange = amount > 0;
 
             Vector3 vector = direction * amount;
-            BoundingBox original = new BoundingBox(Vector3.Zero, Vector3.One);
+            BoundingBox original = new BoundingBox(origin, origin + size);
 
-            BoundingBox other = new BoundingBox(direction, Vector3.One + direction);
+            BoundingBox other = new BoundingBox(origin + direction, origin + direction + size);
 
             Vector3 movement = vector;
             var changed = CollisionDetection.ClipMovementAgainstSolid(original, other, ref movement);
