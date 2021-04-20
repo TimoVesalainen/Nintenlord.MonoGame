@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Nintenlord.Collections;
+using Nintenlord.Utility.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,24 +47,24 @@ namespace Nintenlord.MonoGame.Geometry
 
         public static IEnumerable<IntegerVector3> GetFromBottomToTop(int x, int y, int minZ, int maxZ)
         {
-            return GetVectors(x, y, CollectionExtensions.RangeFromTo(minZ, maxZ));
+            return GetVectors(x, y, IntegerExtensions.GetIntegers(minZ, maxZ));
         }
 
         public static IEnumerable<IntegerVector3> GetFromTopToBottom(int x, int y, int minZ, int maxZ)
         {
-            return GetVectors(x, y, CollectionExtensions.RangeFromTo(maxZ, minZ, -1));
+            return GetVectors(x, y, IntegerExtensions.GetIntegers(maxZ, minZ, -1));
         }
 
         public static IEnumerable<IntegerVector3> GetRadius(int r)
         {
-            var range = CollectionExtensions.RangeFromTo(-r, r);
+            var range = IntegerExtensions.GetIntegers(-r, r);
             return GetVectors(range, range, range);
         }
 
         public static IEnumerable<IntegerVector3> GetRadiusHollow(int r)
         {
-            var rangeFull = CollectionExtensions.RangeFromTo(-r, r);
-            var rangeEdgeless = CollectionExtensions.RangeFromTo(-r + 1, r - 1);
+            var rangeFull = IntegerExtensions.GetIntegers(-r, r);
+            var rangeEdgeless = IntegerExtensions.GetIntegers(-r + 1, r - 1);
 
             return GetVectors(r, rangeFull, rangeFull)
                 .Concat(GetVectors(-r, rangeFull, rangeFull))
@@ -75,26 +76,26 @@ namespace Nintenlord.MonoGame.Geometry
 
         public static IEnumerable<IntegerVector3> GetRadiusX(int r, int x)
         {
-            var range = CollectionExtensions.RangeFromTo(-r, r);
+            var range = IntegerExtensions.GetIntegers(-r, r);
             return GetVectors(x, range, range);
         }
 
         public static IEnumerable<IntegerVector3> GetRadiusY(int r, int y)
         {
-            var range = CollectionExtensions.RangeFromTo(-r, r);
+            var range = IntegerExtensions.GetIntegers(-r, r);
             return GetVectors(range, y, range);
         }
 
         public static IEnumerable<IntegerVector3> GetRadiusZ(int r, int z)
         {
-            var range = CollectionExtensions.RangeFromTo(-r, r);
+            var range = IntegerExtensions.GetIntegers(-r, r);
             return GetVectors(range, range, z);
         }
 
         public static IEnumerable<IntegerVector3> GetRadiusHollowX(int r, int x)
         {
-            var rangeFull = CollectionExtensions.RangeFromTo(-r, r);
-            var rangeEdgeless = CollectionExtensions.RangeFromTo(-r + 1, r - 1);
+            var rangeFull = IntegerExtensions.GetIntegers(-r, r);
+            var rangeEdgeless = IntegerExtensions.GetIntegers(-r + 1, r - 1);
 
             return GetVectors(x, r, rangeFull)
                 .Concat(GetVectors(x, -r, rangeFull))
@@ -104,8 +105,8 @@ namespace Nintenlord.MonoGame.Geometry
 
         public static IEnumerable<IntegerVector3> GetRadiusHollowY(int r, int y)
         {
-            var rangeFull = CollectionExtensions.RangeFromTo(-r, r);
-            var rangeEdgeless = CollectionExtensions.RangeFromTo(-r + 1, r - 1);
+            var rangeFull = IntegerExtensions.GetIntegers(-r, r);
+            var rangeEdgeless = IntegerExtensions.GetIntegers(-r + 1, r - 1);
 
             return GetVectors(r, y, rangeFull)
                 .Concat(GetVectors(-r, y, rangeFull))
@@ -115,8 +116,8 @@ namespace Nintenlord.MonoGame.Geometry
 
         public static IEnumerable<IntegerVector3> GetRadiusHollowZ(int r, int z)
         {
-            var rangeFull = CollectionExtensions.RangeFromTo(-r, r);
-            var rangeEdgeless = CollectionExtensions.RangeFromTo(-r + 1, r - 1);
+            var rangeFull = IntegerExtensions.GetIntegers(-r, r);
+            var rangeEdgeless = IntegerExtensions.GetIntegers(-r + 1, r - 1);
 
             return GetVectors(r, rangeFull, z)
                 .Concat(GetVectors(-r, rangeFull, z))
@@ -137,9 +138,9 @@ namespace Nintenlord.MonoGame.Geometry
         public static IEnumerable<IntegerVector3> GetCube(IntegerVector3 start, IntegerVector3 end)
         {
             return GetVectors(
-                CollectionExtensions.RangeFromTo(start.X, end.X),
-                CollectionExtensions.RangeFromTo(start.Y, end.Y),
-                CollectionExtensions.RangeFromTo(start.Z, end.Z));
+                IntegerExtensions.GetIntegers(start.X, end.X),
+                IntegerExtensions.GetIntegers(start.Y, end.Y),
+                IntegerExtensions.GetIntegers(start.Z, end.Z));
         }
 
         public static IEnumerable<IntegerVector3> GetInsideBoundingBox(BoundingBox box)
@@ -162,7 +163,7 @@ namespace Nintenlord.MonoGame.Geometry
                 }
             }
 
-            var invertibleInts = CollectionExtensions.RangeFromTo(-int.MaxValue, int.MaxValue);
+            var invertibleInts = IntegerExtensions.GetIntegers(-int.MaxValue, int.MaxValue);
 
             var onlyMinValue = new int[] { int.MinValue };
 
