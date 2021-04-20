@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Nintenlord.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,94 +22,91 @@ namespace Nintenlord.MonoGame.Geometry
                 }
             }
         }
+        public static IEnumerable<IntegerVector3> GetVectors(int x, IEnumerable<int> ys, IEnumerable<int> zs) => GetVectors(new int[] { x }, ys, zs);
+        public static IEnumerable<IntegerVector3> GetVectors(IEnumerable<int> xs, int y, IEnumerable<int> zs) => GetVectors(xs, new int[] { y }, zs);
+        public static IEnumerable<IntegerVector3> GetVectors(IEnumerable<int> xs, IEnumerable<int> ys, int z) => GetVectors(xs, ys, new int[] { z });
+        public static IEnumerable<IntegerVector3> GetVectors(int x, int y, IEnumerable<int> zs) => GetVectors(new int[] { x }, new int[] { y }, zs);
+        public static IEnumerable<IntegerVector3> GetVectors(IEnumerable<int> xs, int y, int z) => GetVectors(xs, new int[] { y }, new int[] { z });
+        public static IEnumerable<IntegerVector3> GetVectors(int x, IEnumerable<int> ys, int z) => GetVectors(new int[] { x }, ys, new int[] { z });
 
         public static IEnumerable<IntegerVector3> GetFromBottomToTop(int x, int y, int minZ, int maxZ)
         {
-            var position = new IntegerVector3(x, y, 0);
-            for (position.Z = minZ; position.Z <= maxZ; position.Z++)
-            {
-                yield return position;
-            }
+            return GetVectors(x, y, CollectionExtensions.RangeFromTo(minZ, maxZ));
         }
 
         public static IEnumerable<IntegerVector3> GetFromTopToBottom(int x, int y, int minZ, int maxZ)
         {
-            var position = new IntegerVector3(x, y, 0);
-            for (position.Z = maxZ; position.Z <= minZ; position.Z--)
-            {
-                yield return position;
-            }
+            return GetVectors(x, y, CollectionExtensions.RangeFromTo(maxZ, minZ, -1));
         }
 
         public static IEnumerable<IntegerVector3> GetRadius(int r)
         {
-            for (int i = -r; i <= r; i++)
-            {
-                for (int j = -r; j <= r; j++)
-                {
-                    for (int k = -r; k <= r; k++)
-                    {
-                        yield return new IntegerVector3(i, j, k);
-                    }
-                }
-            }
+            var range = CollectionExtensions.RangeFromTo(-r, r);
+            return GetVectors(range, range, range);
         }
 
         public static IEnumerable<IntegerVector3> GetRadiusHollow(int r)
         {
-            for (int z = -r; z <= r; z++)
-            {
-                for (int y = -r; y <= r; y++)
-                {
-                    yield return new IntegerVector3(-r, y, z);
-                    yield return new IntegerVector3(r, y, z);
-                }
-            }
+            var rangeFull = CollectionExtensions.RangeFromTo(-r, r);
+            var rangeEdgeless = CollectionExtensions.RangeFromTo(-r + 1, r - 1);
 
-            for (int z = -r; z <= r; z++)
-            {
-                for (int x = -r + 1; x < r; x++)
-                {
-                    yield return new IntegerVector3(x, -r, z);
-                    yield return new IntegerVector3(x, r, z);
-                }
-            }
-
-            for (int y = -r + 1; y < r; y++)
-            {
-                for (int x = -r + 1; x < r; x++)
-                {
-                    yield return new IntegerVector3(x, y, -r);
-                    yield return new IntegerVector3(x, y, r);
-                }
-            }
+            return GetVectors(r, rangeFull, rangeFull)
+                .Concat(GetVectors(-r, rangeFull, rangeFull))
+                .Concat(GetVectors(rangeEdgeless, r, rangeFull))
+                .Concat(GetVectors(rangeEdgeless, -r, rangeFull))
+                .Concat(GetVectors(rangeEdgeless, rangeEdgeless, r))
+                .Concat(GetVectors(rangeEdgeless, rangeEdgeless, -r));
         }
 
-        public static IEnumerable<IntegerVector3> GetRadius(int r, int z)
+        public static IEnumerable<IntegerVector3> GetRadiusX(int r, int x)
         {
-            for (int i = -r; i <= r; i++)
-            {
-                for (int j = -r; j <= r; j++)
-                {
-                    yield return new IntegerVector3(i, j, z);
-                }
-            }
+            var range = CollectionExtensions.RangeFromTo(-r, r);
+            return GetVectors(x, range, range);
         }
 
-        public static IEnumerable<IntegerVector3> GetRadiusHollow(int r, int z)
+        public static IEnumerable<IntegerVector3> GetRadiusY(int r, int y)
         {
-            for (int j = -r; j <= r; j++)
-            {
-                yield return new IntegerVector3(-r, j, z);
-                yield return new IntegerVector3(r, j, z);
-            }
+            var range = CollectionExtensions.RangeFromTo(-r, r);
+            return GetVectors(range, y, range);
+        }
 
+        public static IEnumerable<IntegerVector3> GetRadiusZ(int r, int z)
+        {
+            var range = CollectionExtensions.RangeFromTo(-r, r);
+            return GetVectors(range, range, z);
+        }
 
-            for (int i = -r + 1; i < r; i++)
-            {
-                yield return new IntegerVector3(i, -r, z);
-                yield return new IntegerVector3(i, r, z);
-            }
+        public static IEnumerable<IntegerVector3> GetRadiusHollowX(int r, int x)
+        {
+            var rangeFull = CollectionExtensions.RangeFromTo(-r, r);
+            var rangeEdgeless = CollectionExtensions.RangeFromTo(-r + 1, r - 1);
+
+            return GetVectors(x, r, rangeFull)
+                .Concat(GetVectors(x, -r, rangeFull))
+                .Concat(GetVectors(x, rangeEdgeless, r))
+                .Concat(GetVectors(x, rangeEdgeless, -r));
+        }
+
+        public static IEnumerable<IntegerVector3> GetRadiusHollowY(int r, int y)
+        {
+            var rangeFull = CollectionExtensions.RangeFromTo(-r, r);
+            var rangeEdgeless = CollectionExtensions.RangeFromTo(-r + 1, r - 1);
+
+            return GetVectors(r, y, rangeFull)
+                .Concat(GetVectors(-r, y, rangeFull))
+                .Concat(GetVectors(rangeEdgeless, y, r))
+                .Concat(GetVectors(rangeEdgeless, y, -r));
+        }
+
+        public static IEnumerable<IntegerVector3> GetRadiusHollowZ(int r, int z)
+        {
+            var rangeFull = CollectionExtensions.RangeFromTo(-r, r);
+            var rangeEdgeless = CollectionExtensions.RangeFromTo(-r + 1, r - 1);
+
+            return GetVectors(r, rangeFull, z)
+                .Concat(GetVectors(-r, rangeFull, z))
+                .Concat(GetVectors(rangeEdgeless, r, z))
+                .Concat(GetVectors(rangeEdgeless, -r, z));
         }
 
         public static IEnumerable<IntegerVector3> GetTouching()
@@ -123,36 +121,10 @@ namespace Nintenlord.MonoGame.Geometry
 
         public static IEnumerable<IntegerVector3> GetCube(IntegerVector3 start, IntegerVector3 end)
         {
-            for (int i = start.X; i <= end.X; i++)
-            {
-                for (int j = start.Y; j <= end.Y; j++)
-                {
-                    for (int k = start.Z; k <= end.Z; k++)
-                    {
-                        yield return new IntegerVector3(i, j, k);
-                    }
-                }
-            }
-        }
-
-        public static IEnumerable<IntegerVector3> GetCartesianProduct(IEnumerable<int> x, IEnumerable<int> y,
-                                                                      IEnumerable<int> z)
-        {
-            var position = new IntegerVector3();
-
-            foreach (int zPos in z)
-            {
-                position.Z = zPos;
-                foreach (int yPas in y)
-                {
-                    position.Y = yPas;
-                    foreach (int xPos in x)
-                    {
-                        position.X = xPos;
-                        yield return position;
-                    }
-                }
-            }
+            return GetVectors(
+                CollectionExtensions.RangeFromTo(start.X, end.X),
+                CollectionExtensions.RangeFromTo(start.Y, end.Y),
+                CollectionExtensions.RangeFromTo(start.Z, end.Z));
         }
 
         public static IEnumerable<IntegerVector3> GetInsideBoundingBox(BoundingBox box)
@@ -175,36 +147,31 @@ namespace Nintenlord.MonoGame.Geometry
                 }
             }
 
-            IEnumerable<int> NotMinValue()//Can't be expressed as Enumerable.Range()
-            {
-                for (int i = -int.MaxValue; i <= int.MaxValue; i++)
-                {
-                    yield return i;
-                }
-            }
+            var invertibleInts = CollectionExtensions.RangeFromTo(-int.MaxValue, int.MaxValue);
+
             var onlyMinValue = new int[] { int.MinValue };
 
-            foreach (var vector in GetVectors(onlyMinValue, NotMinValue(), NotMinValue()))
+            foreach (var vector in GetVectors(onlyMinValue, invertibleInts, invertibleInts))
             {
                 yield return vector;
             }
-            foreach (var vector in GetVectors(NotMinValue(), onlyMinValue, NotMinValue()))
+            foreach (var vector in GetVectors(invertibleInts, onlyMinValue, invertibleInts))
             {
                 yield return vector;
             }
-            foreach (var vector in GetVectors(NotMinValue(), NotMinValue(), onlyMinValue))
+            foreach (var vector in GetVectors(invertibleInts, invertibleInts, onlyMinValue))
             {
                 yield return vector;
             }
-            foreach (var vector in GetVectors(NotMinValue(), onlyMinValue, onlyMinValue))
+            foreach (var vector in GetVectors(invertibleInts, onlyMinValue, onlyMinValue))
             {
                 yield return vector;
             }
-            foreach (var vector in GetVectors(onlyMinValue, NotMinValue(), onlyMinValue))
+            foreach (var vector in GetVectors(onlyMinValue, invertibleInts, onlyMinValue))
             {
                 yield return vector;
             }
-            foreach (var vector in GetVectors(onlyMinValue, onlyMinValue, NotMinValue()))
+            foreach (var vector in GetVectors(onlyMinValue, onlyMinValue, invertibleInts))
             {
                 yield return vector;
             }
