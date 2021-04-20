@@ -11,6 +11,21 @@ namespace Nintenlord.MonoGame.Geometry
     {
         public static IEnumerable<IntegerVector3> GetVectors(IEnumerable<int> xs, IEnumerable<int> ys, IEnumerable<int> zs)
         {
+            if (xs is null)
+            {
+                throw new ArgumentNullException(nameof(xs));
+            }
+
+            if (ys is null)
+            {
+                throw new ArgumentNullException(nameof(ys));
+            }
+
+            if (zs is null)
+            {
+                throw new ArgumentNullException(nameof(zs));
+            }
+
             foreach (var z in zs)
             {
                 foreach (var y in ys)
