@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Nintenlord.MonoGame.Geometry
 {
+    [DataContract]
     public struct IntegerVector3 : IEquatable<IntegerVector3>
     {
         private static readonly IntegerVector3 zero = new IntegerVector3(0, 0, 0);
@@ -14,8 +16,12 @@ namespace Nintenlord.MonoGame.Geometry
         private static readonly IntegerVector3 unitZ = new IntegerVector3(0, 0, 1);
         private static readonly IntegerVector3 min = new IntegerVector3(int.MinValue, int.MinValue, int.MinValue);
         private static readonly IntegerVector3 max = new IntegerVector3(int.MaxValue, int.MaxValue, int.MaxValue);
+
+        [DataMember]
         public int X;
+        [DataMember]
         public int Y;
+        [DataMember]
         public int Z;
 
         public IntegerVector3(int x, int y, int z)
