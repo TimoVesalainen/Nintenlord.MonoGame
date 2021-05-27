@@ -19,9 +19,6 @@ namespace Nintenlord.MonoGame.Noise
 
             Vector2 inCellPosition = position - new Vector2(xMin, yMin);
 
-            xMin = xMin & 0xFF;
-            yMin = yMin & 0xFF;
-
             var gradLeftBottom = GradientVector(xMin, yMin);
             var gradLeftTop = GradientVector(xMin, yMin + 1);
             var gradRightBottom = GradientVector(xMin + 1, yMin);

@@ -45,6 +45,8 @@ namespace Nintenlord.MonoGame.Noise
 
         protected override Vector2 GradientVector(int x, int y)
         {
+            x &= 0xFF;
+            y &= 0xFF;
             int hash = permuteLookup[permuteLookup[permuteLookup[x + seed] + y]] & 15;
 
             float resultX = 1;
