@@ -198,6 +198,21 @@ namespace Nintenlord.MonoGame.Geometry
             return result.ToArray();
         }
 
+        public static Vector3 GetRandomUnitVector(this Random random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            var theta = Math.Acos(2 * random.NextDouble() - 1);
+            var phi = MathHelper.TwoPi * random.NextDouble();
+            return new Vector3(
+                (float)(Math.Cos(phi) * Math.Sin(theta)),
+                (float)(Math.Sin(phi) * Math.Sin(theta)),
+                (float)Math.Cos(theta));
+        }
+
         #endregion
     }
 }
