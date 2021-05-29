@@ -58,8 +58,8 @@ namespace Nintenlord.MonoGame.Noise
                 else
                 {
                     IntegerVector3 pm = (cubeCoordinate + c.rv) & PMASK;
-                    Vector3 grad = permVector3[perm[perm[pm.X] ^ pm.Y] ^ pm.Z];
-                    float extrapolation = Vector3.Dot(grad, dr);
+                    Vector3 gradient = permVector3[perm[perm[pm.X] ^ pm.Y] ^ pm.Z];
+                    float extrapolation = Vector3.Dot(gradient, dr);
 
                     attn *= attn;
                     value += attn * attn * extrapolation;
@@ -84,8 +84,8 @@ namespace Nintenlord.MonoGame.Noise
             }
         }
 
-        private const int PSIZE = 2048;
-        private const int PMASK = 2047;
+        private const int PSIZE = 1 << 11;
+        private const int PMASK = PSIZE - 1;
         private const float N3 = 0.030485933181293584f;
         private readonly short[] perm;
         private readonly Vector3[] permVector3;
