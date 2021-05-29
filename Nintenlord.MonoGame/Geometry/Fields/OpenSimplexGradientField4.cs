@@ -218,6 +218,8 @@ namespace Nintenlord.MonoGame.Geometry.Fields
         public OpenSimplexGradientField4(long seed)
         {
             short[] source = new short[PERMUTATION_SIZE];
+            permutation = new short[PERMUTATION_SIZE];
+            gradientPermutation = new Vector4[PERMUTATION_SIZE];
             for (short i = 0; i < source.Length; i++)
             {
                 source[i] = i;

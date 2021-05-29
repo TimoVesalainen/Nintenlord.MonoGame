@@ -60,6 +60,8 @@ namespace Nintenlord.MonoGame.Geometry.Fields
 
         public OpenSimplexGradientField2(long seed)
         {
+            permutation = new short[PERMUTATION_SIZE];
+            gradientPermutation = new Vector2[PERMUTATION_SIZE];
             short[] source = new short[PERMUTATION_SIZE];
             for (short i = 0; i < source.Length; i++)
             {
