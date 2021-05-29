@@ -85,8 +85,11 @@ namespace Nintenlord.MonoGame.Geometry.Fields
             permVector3 = new Vector3[PSIZE];
             short[] source = new short[PSIZE];
 
-            for (short i = 0; i < PSIZE; i++)
+            for (short i = 0; i < source.Length; i++)
+            {
                 source[i] = i;
+            }
+
             for (int i = PSIZE - 1; i >= 0; i--)
             {
                 seed = seed * 6364136223846793005L + 1442695040888963407L;
