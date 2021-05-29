@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Nintenlord.MonoGame.Geometry;
 using Nintenlord.MonoGame.Geometry.Fields;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nintenlord.MonoGame.Noise
 {
@@ -21,10 +18,9 @@ namespace Nintenlord.MonoGame.Noise
             // If texturing objects that don't tend to have cardinal plane faces, you could even remove this.
             // Orthonormal rotation. Not a skew transform.
             float r = (2.0f / 3.0f) * (position.X + position.Y + position.Z);
-            var rv = new Vector3(r) - position;
 
             // Evaluate both lattices to form a BCC lattice.
-            return noise3_BCC(rv);
+            return noise3_BCC(new Vector3(r) - position);
         }
 
         /**
@@ -47,93 +43,96 @@ namespace Nintenlord.MonoGame.Noise
 
             // Point contributions
             double value = 0;
-            LatticePoint3D c = LOOKUP_3D[octantIndex];
-            while (c != null)
+            LatticePoint3D[] c = LOOKUP_3D[octantIndex];
+            int index = 0;
+            while (index >= 0)
             {
-                Vector3 dr = inCubeCoordinate + c.dr;
+                Vector3 dr = inCubeCoordinate + c[index].dr;
                 float attn = 0.5f - dr.LengthSquared();
                 if (attn < 0)
                 {
-                    c = c.NextOnFailure;
+                    index = c[index].NextOnFailure;
                 }
                 else
                 {
-                    IntegerVector3 gradientPositions = cubeCoordinate + c.rv;
+                    IntegerVector3 gradientPositions = cubeCoordinate + c[index].rv;
                     Vector3 gradient = gradientField[gradientPositions.X, gradientPositions.Y, gradientPositions.Z];
                     float extrapolation = Vector3.Dot(gradient, dr);
 
                     attn *= attn;
                     value += attn * attn * extrapolation;
-                    c = c.NextOnSuccess;
+                    index = c[index].NextOnSuccess;
                 }
             }
             return value;
         }
 
-        private class LatticePoint3D
+        private struct LatticePoint3D
         {
             public Vector3 dr;
             public IntegerVector3 rv;
 
-            public LatticePoint3D NextOnFailure, NextOnSuccess;
-            public LatticePoint3D(int xrv, int yrv, int zrv, int lattice)
+            public int NextOnFailure, NextOnSuccess;
+            public LatticePoint3D(int xrv, int yrv, int zrv, int lattice, int success, int failure)
             {
                 var prv = new IntegerVector3(xrv, yrv, zrv);
 
                 dr = new Vector3(0.5f) * lattice - (Vector3)prv;
                 rv = new IntegerVector3(1024) * lattice + prv;
+                NextOnFailure = failure;
+                NextOnSuccess = success;
             }
         }
 
-        private readonly LatticePoint3D[] LOOKUP_3D;
+        private readonly LatticePoint3D[][] LOOKUP_3D;
         private readonly IVectorField3iTo3v gradientField;
 
         public OpenSimplexNoise3D(IVectorField3iTo3v gradientField)
         {
             this.gradientField = gradientField;
 
-            LOOKUP_3D = new LatticePoint3D[8];
-            for (int i = 0; i < 8; i++)
+            LOOKUP_3D = new LatticePoint3D[8][];
+            for (int i = 0; i < LOOKUP_3D.Length; i++)
             {
-                int i1, j1, k1, i2, j2, k2;
-                i1 = (i >> 0) & 1;
-                j1 = (i >> 1) & 1;
-                k1 = (i >> 2) & 1;
-                i2 = i1 ^ 1;
-                j2 = j1 ^ 1;
-                k2 = k1 ^ 1;
-
-                // The two points within this octant, one from each of the two cubic half-lattices.
-                LatticePoint3D c0 = new LatticePoint3D(i1, j1, k1, 0);
-                LatticePoint3D c1 = new LatticePoint3D(i1 + i2, j1 + j2, k1 + k2, 1);
-
-                // Each single step away on the first half-lattice.
-                LatticePoint3D c2 = new LatticePoint3D(i2, j1, k1, 0);
-                LatticePoint3D c3 = new LatticePoint3D(i1, j2, k1, 0);
-                LatticePoint3D c4 = new LatticePoint3D(i1, j1, k2, 0);
-
-                // Each single step away on the second half-lattice.
-                LatticePoint3D c5 = new LatticePoint3D(i1 + i1, j1 + j2, k1 + k2, 1);
-                LatticePoint3D c6 = new LatticePoint3D(i1 + i2, j1 + j1, k1 + k2, 1);
-                LatticePoint3D c7 = new LatticePoint3D(i1 + i2, j1 + j2, k1 + k1, 1);
-
-                // First two are guaranteed.
-                c0.NextOnFailure = c0.NextOnSuccess = c1;
-                c1.NextOnFailure = c1.NextOnSuccess = c2;
-
-                // Once we find one on the first half-lattice, the rest are out.
-                // In addition, knowing c2 rules out c5.
-                c2.NextOnFailure = c3; c2.NextOnSuccess = c6;
-                c3.NextOnFailure = c4; c3.NextOnSuccess = c5;
-                c4.NextOnFailure = c4.NextOnSuccess = c5;
-
-                // Once we find one on the second half-lattice, the rest are out.
-                c5.NextOnFailure = c6; c5.NextOnSuccess = null;
-                c6.NextOnFailure = c7; c6.NextOnSuccess = null;
-                c7.NextOnFailure = c7.NextOnSuccess = null;
-
-                LOOKUP_3D[i] = c0;
+                LOOKUP_3D[i] = GetLattice(i);
             }
+        }
+
+        private static LatticePoint3D[] GetLattice(int index)
+        {
+            int i1, j1, k1, i2, j2, k2;
+            i1 = (index >> 0) & 1;
+            j1 = (index >> 1) & 1;
+            k1 = (index >> 2) & 1;
+            i2 = i1 ^ 1;
+            j2 = j1 ^ 1;
+            k2 = k1 ^ 1;
+
+            // The two points within this octant, one from each of the two cubic half-lattices.
+            LatticePoint3D c0 = new LatticePoint3D(i1, j1, k1, 0, 1, 1);
+            LatticePoint3D c1 = new LatticePoint3D(i1 + i2, j1 + j2, k1 + k2, 1, 2, 2);
+
+            // Each single step away on the first half-lattice.
+            LatticePoint3D c2 = new LatticePoint3D(i2, j1, k1, 0, 3, 6);
+            LatticePoint3D c3 = new LatticePoint3D(i1, j2, k1, 0, 4, 5);
+            LatticePoint3D c4 = new LatticePoint3D(i1, j1, k2, 0, 5, 5);
+
+            // Each single step away on the second half-lattice.
+            LatticePoint3D c5 = new LatticePoint3D(i1 + i1, j1 + j2, k1 + k2, 1, 6, -1);
+            LatticePoint3D c6 = new LatticePoint3D(i1 + i2, j1 + j1, k1 + k2, 1, 7, -1);
+            LatticePoint3D c7 = new LatticePoint3D(i1 + i2, j1 + j2, k1 + k1, 1, -1, -1);
+
+            return new[]
+            {
+                c0,
+                c1,
+                c2,
+                c3,
+                c4,
+                c5,
+                c6,
+                c7
+            };
         }
     }
 }
