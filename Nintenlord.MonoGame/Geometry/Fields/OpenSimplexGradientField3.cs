@@ -11,7 +11,7 @@ namespace Nintenlord.MonoGame.Geometry.Fields
 
         static OpenSimplexGradientField3()
         {
-            var GRADIENTS_3D = new Vector3[PSIZE];
+            GRADIENTS_3D = new Vector3[PSIZE];
             const float c1 = 2.22474487139f;
             const float c2 = 3.0862664687972017f;
             const float c3 = 1.1721513422464978f;
