@@ -80,7 +80,7 @@ namespace Nintenlord.MonoGame.Noise
                 var prv = new IntegerVector3(xrv, yrv, zrv);
 
                 dr = new Vector3(0.5f) * lattice - (Vector3)prv;
-                rv = new IntegerVector3(1024, 1024, 1024) * lattice + prv;
+                rv = new IntegerVector3(1024) * lattice + prv;
             }
         }
 

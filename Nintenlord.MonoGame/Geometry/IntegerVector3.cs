@@ -31,6 +31,13 @@ namespace Nintenlord.MonoGame.Geometry
             Z = z;
         }
 
+        public IntegerVector3(int r)
+        {
+            X = r;
+            Y = r;
+            Z = r;
+        }
+
         public IntegerVector3(Point xy, int z)
         {
             X = xy.X;
