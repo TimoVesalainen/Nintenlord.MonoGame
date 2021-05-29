@@ -399,25 +399,11 @@ namespace Nintenlord.MonoGame.Geometry
             return result;
         }
 
-        //public static IntegerVector3 operator >>(IntegerVector3 a, IntegerVector3 b)
-        //{
-        //    IntegerVector3 result;
-        //    RightShift(ref a, ref b, out result);
-        //    return result;
-        //}
-
         public static IntegerVector3 operator >>(IntegerVector3 a, int b)
         {
             RightShift(ref a, b, out IntegerVector3 result);
             return result;
         }
-
-        //public static IntegerVector3 operator <<(IntegerVector3 a, IntegerVector3 b)
-        //{
-        //    IntegerVector3 result;
-        //    LeftShift(ref a, ref b, out result);
-        //    return result;
-        //}
 
         public static IntegerVector3 operator <<(IntegerVector3 a, int b)
         {
