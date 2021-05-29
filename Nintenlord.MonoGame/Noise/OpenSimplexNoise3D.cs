@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Nintenlord.MonoGame.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,13 +19,11 @@ namespace Nintenlord.MonoGame.Noise
             // Re-orient the cubic lattices via rotation, to produce the expected look on cardinal planar slices.
             // If texturing objects that don't tend to have cardinal plane faces, you could even remove this.
             // Orthonormal rotation. Not a skew transform.
-            double r = (2.0 / 3.0) * (position.X + position.Y + position.Z);
-            double xr = r - position.X;
-            double yr = r - position.Y;
-            double zr = r - position.Z;
+            float r = (2.0f / 3.0f) * (position.X + position.Y + position.Z);
+            var rv = new Vector3(r) - position;
 
             // Evaluate both lattices to form a BCC lattice.
-            return noise3_BCC(xr, yr, zr);
+            return noise3_BCC(rv);
         }
 
         /**
@@ -33,44 +32,34 @@ namespace Nintenlord.MonoGame.Noise
          * It was actually faster to narrow down the points in the loop itself,
          * than to build up the index with enough info to isolate 4 points.
          */
-        private double noise3_BCC(double xr, double yr, double zr)
+        private double noise3_BCC(Vector3 position)
         {
             // Get base and offsets inside cube of first lattice.
-            int xrb = (int)Math.Floor(xr);
-            int yrb = (int)Math.Floor(yr);
-            int zrb = (int)Math.Floor(zr);
+            IntegerVector3 cubeCoordinate = IntegerVector3.Floor(position);
 
-            double xri = xr - xrb;
-            double yri = yr - yrb;
-            double zri = zr - zrb;
+            Vector3 inCubeCoordinate = position - (Vector3)cubeCoordinate;
 
             // Identify which octant of the cube we're in. This determines which cell
             // in the other cubic lattice we're in, and also narrows down one point on each.
-            int xht = (int)(xri + 0.5);
-            int yht = (int)(yri + 0.5);
-            int zht = (int)(zri + 0.5);
-            int index = (xht << 0) | (yht << 1) | (zht << 2);
+            IntegerVector3 latticeOctantCoord = (IntegerVector3)(inCubeCoordinate + Vector3.One * 0.5f);
+            int octantIndex = (latticeOctantCoord.X << 0) | (latticeOctantCoord.Y << 1) | (latticeOctantCoord.Z << 2);
 
             // Point contributions
             double value = 0;
-            LatticePoint3D c = LOOKUP_3D[index];
+            LatticePoint3D c = LOOKUP_3D[octantIndex];
             while (c != null)
             {
-                double dxr = xri + c.dxr;
-                double dyr = yri + c.dyr;
-                double dzr = zri + c.dzr;
-                double attn = 0.5 - dxr * dxr - dyr * dyr - dzr * dzr;
+                Vector3 dr = inCubeCoordinate + c.dr;
+                float attn = 0.5f - dr.LengthSquared();
                 if (attn < 0)
                 {
                     c = c.NextOnFailure;
                 }
                 else
                 {
-                    int pxm = (xrb + c.xrv) & PMASK;
-                    int pym = (yrb + c.yrv) & PMASK;
-                    int pzm = (zrb + c.zrv) & PMASK;
-                    Grad3 grad = permGrad3[perm[perm[pxm] ^ pym] ^ pzm];
-                    double extrapolation = grad.dx * dxr + grad.dy * dyr + grad.dz * dzr;
+                    IntegerVector3 pm = (cubeCoordinate + c.rv) & PMASK;
+                    Vector3 grad = permVector3[perm[perm[pm.X] ^ pm.Y] ^ pm.Z];
+                    float extrapolation = Vector3.Dot(grad, dr);
 
                     attn *= attn;
                     value += attn * attn * extrapolation;
@@ -80,46 +69,33 @@ namespace Nintenlord.MonoGame.Noise
             return value;
         }
 
-        private struct Grad3
-        {
-            public double dx, dy, dz;
-            public Grad3(double dx, double dy, double dz)
-            {
-                this.dx = dx;
-                this.dy = dy;
-                this.dz = dz;
-            }
-        }
-
         private class LatticePoint3D
         {
-            public double dxr, dyr, dzr;
-            public int xrv, yrv, zrv;
+            public Vector3 dr;
+            public IntegerVector3 rv;
 
             public LatticePoint3D NextOnFailure, NextOnSuccess;
             public LatticePoint3D(int xrv, int yrv, int zrv, int lattice)
             {
-                this.dxr = -xrv + lattice * 0.5;
-                this.dyr = -yrv + lattice * 0.5;
-                this.dzr = -zrv + lattice * 0.5;
-                this.xrv = xrv + lattice * 1024;
-                this.yrv = yrv + lattice * 1024;
-                this.zrv = zrv + lattice * 1024;
+                var prv = new IntegerVector3(xrv, yrv, zrv);
+
+                dr = new Vector3(0.5f) * lattice - (Vector3)prv;
+                rv = new IntegerVector3(1024, 1024, 1024) * lattice + prv;
             }
         }
 
         private const int PSIZE = 2048;
         private const int PMASK = 2047;
-        private const double N3 = 0.030485933181293584;
+        private const float N3 = 0.030485933181293584f;
         private readonly short[] perm;
-        private readonly Grad3[] permGrad3;
+        private readonly Vector3[] permVector3;
         private readonly LatticePoint3D[] LOOKUP_3D;
-        private readonly Grad3[] GRADIENTS_3D;
+        private readonly Vector3[] GRADIENTS_3D;
 
         public OpenSimplexNoise3D(long seed)
         {
             perm = new short[PSIZE];
-            permGrad3 = new Grad3[PSIZE];
+            permVector3 = new Vector3[PSIZE];
             short[] source = new short[PSIZE];
             for (short i = 0; i < PSIZE; i++)
                 source[i] = i;
@@ -130,7 +106,7 @@ namespace Nintenlord.MonoGame.Noise
                 if (r < 0)
                     r += (i + 1);
                 perm[i] = source[r];
-                permGrad3[i] = GRADIENTS_3D[perm[i]];
+                permVector3[i] = GRADIENTS_3D[perm[i]];
                 source[r] = source[i];
             }
 
@@ -178,64 +154,64 @@ namespace Nintenlord.MonoGame.Noise
             }
 
 
-            GRADIENTS_3D = new Grad3[PSIZE];
-            Grad3[] grad3 = {
-                new Grad3(-2.22474487139,      -2.22474487139,      -1.0),
-                new Grad3(-2.22474487139,      -2.22474487139,       1.0),
-                new Grad3(-3.0862664687972017, -1.1721513422464978,  0.0),
-                new Grad3(-1.1721513422464978, -3.0862664687972017,  0.0),
-                new Grad3(-2.22474487139,      -1.0,                -2.22474487139),
-                new Grad3(-2.22474487139,       1.0,                -2.22474487139),
-                new Grad3(-1.1721513422464978,  0.0,                -3.0862664687972017),
-                new Grad3(-3.0862664687972017,  0.0,                -1.1721513422464978),
-                new Grad3(-2.22474487139,      -1.0,                 2.22474487139),
-                new Grad3(-2.22474487139,       1.0,                 2.22474487139),
-                new Grad3(-3.0862664687972017,  0.0,                 1.1721513422464978),
-                new Grad3(-1.1721513422464978,  0.0,                 3.0862664687972017),
-                new Grad3(-2.22474487139,       2.22474487139,      -1.0),
-                new Grad3(-2.22474487139,       2.22474487139,       1.0),
-                new Grad3(-1.1721513422464978,  3.0862664687972017,  0.0),
-                new Grad3(-3.0862664687972017,  1.1721513422464978,  0.0),
-                new Grad3(-1.0,                -2.22474487139,      -2.22474487139),
-                new Grad3( 1.0,                -2.22474487139,      -2.22474487139),
-                new Grad3( 0.0,                -3.0862664687972017, -1.1721513422464978),
-                new Grad3( 0.0,                -1.1721513422464978, -3.0862664687972017),
-                new Grad3(-1.0,                -2.22474487139,       2.22474487139),
-                new Grad3( 1.0,                -2.22474487139,       2.22474487139),
-                new Grad3( 0.0,                -1.1721513422464978,  3.0862664687972017),
-                new Grad3( 0.0,                -3.0862664687972017,  1.1721513422464978),
-                new Grad3(-1.0,                 2.22474487139,      -2.22474487139),
-                new Grad3( 1.0,                 2.22474487139,      -2.22474487139),
-                new Grad3( 0.0,                 1.1721513422464978, -3.0862664687972017),
-                new Grad3( 0.0,                 3.0862664687972017, -1.1721513422464978),
-                new Grad3(-1.0,                 2.22474487139,       2.22474487139),
-                new Grad3( 1.0,                 2.22474487139,       2.22474487139),
-                new Grad3( 0.0,                 3.0862664687972017,  1.1721513422464978),
-                new Grad3( 0.0,                 1.1721513422464978,  3.0862664687972017),
-                new Grad3( 2.22474487139,      -2.22474487139,      -1.0),
-                new Grad3( 2.22474487139,      -2.22474487139,       1.0),
-                new Grad3( 1.1721513422464978, -3.0862664687972017,  0.0),
-                new Grad3( 3.0862664687972017, -1.1721513422464978,  0.0),
-                new Grad3( 2.22474487139,      -1.0,                -2.22474487139),
-                new Grad3( 2.22474487139,       1.0,                -2.22474487139),
-                new Grad3( 3.0862664687972017,  0.0,                -1.1721513422464978),
-                new Grad3( 1.1721513422464978,  0.0,                -3.0862664687972017),
-                new Grad3( 2.22474487139,      -1.0,                 2.22474487139),
-                new Grad3( 2.22474487139,       1.0,                 2.22474487139),
-                new Grad3( 1.1721513422464978,  0.0,                 3.0862664687972017),
-                new Grad3( 3.0862664687972017,  0.0,                 1.1721513422464978),
-                new Grad3( 2.22474487139,       2.22474487139,      -1.0),
-                new Grad3( 2.22474487139,       2.22474487139,       1.0),
-                new Grad3( 3.0862664687972017,  1.1721513422464978,  0.0),
-                new Grad3( 1.1721513422464978,  3.0862664687972017,  0.0)
+            GRADIENTS_3D = new Vector3[PSIZE];
+            Vector3[] Vector3 = {
+                new Vector3(-2.22474487139f,      -2.22474487139f,      -1.0f),
+                new Vector3(-2.22474487139f,      -2.22474487139f,       1.0f),
+                new Vector3(-3.0862664687972017f, -1.1721513422464978f,  0.0f),
+                new Vector3(-1.1721513422464978f, -3.0862664687972017f,  0.0f),
+                new Vector3(-2.22474487139f,      -1.0f,                -2.22474487139f),
+                new Vector3(-2.22474487139f,       1.0f,                -2.22474487139f),
+                new Vector3(-1.1721513422464978f,  0.0f,                -3.0862664687972017f),
+                new Vector3(-3.0862664687972017f,  0.0f,                -1.1721513422464978f),
+                new Vector3(-2.22474487139f,      -1.0f,                 2.22474487139f),
+                new Vector3(-2.22474487139f,       1.0f,                 2.22474487139f),
+                new Vector3(-3.0862664687972017f,  0.0f,                 1.1721513422464978f),
+                new Vector3(-1.1721513422464978f,  0.0f,                 3.0862664687972017f),
+                new Vector3(-2.22474487139f,       2.22474487139f,      -1.0f),
+                new Vector3(-2.22474487139f,       2.22474487139f,       1.0f),
+                new Vector3(-1.1721513422464978f,  3.0862664687972017f,  0.0f),
+                new Vector3(-3.0862664687972017f,  1.1721513422464978f,  0.0f),
+                new Vector3(-1.0f,                -2.22474487139f,      -2.22474487139f),
+                new Vector3( 1.0f,                -2.22474487139f,      -2.22474487139f),
+                new Vector3( 0.0f,                -3.0862664687972017f, -1.1721513422464978f),
+                new Vector3( 0.0f,                -1.1721513422464978f, -3.0862664687972017f),
+                new Vector3(-1.0f,                -2.22474487139f,       2.22474487139f),
+                new Vector3( 1.0f,                -2.22474487139f,       2.22474487139f),
+                new Vector3( 0.0f,                -1.1721513422464978f,  3.0862664687972017f),
+                new Vector3( 0.0f,                -3.0862664687972017f,  1.1721513422464978f),
+                new Vector3(-1.0f,                 2.22474487139f,      -2.22474487139f),
+                new Vector3( 1.0f,                 2.22474487139f,      -2.22474487139f),
+                new Vector3( 0.0f,                 1.1721513422464978f, -3.0862664687972017f),
+                new Vector3( 0.0f,                 3.0862664687972017f, -1.1721513422464978f),
+                new Vector3(-1.0f,                 2.22474487139f,       2.22474487139f),
+                new Vector3( 1.0f,                 2.22474487139f,       2.22474487139f),
+                new Vector3( 0.0f,                 3.0862664687972017f,  1.1721513422464978f),
+                new Vector3( 0.0f,                 1.1721513422464978f,  3.0862664687972017f),
+                new Vector3( 2.22474487139f,      -2.22474487139f,      -1.0f),
+                new Vector3( 2.22474487139f,      -2.22474487139f,       1.0f),
+                new Vector3( 1.1721513422464978f, -3.0862664687972017f,  0.0f),
+                new Vector3( 3.0862664687972017f, -1.1721513422464978f,  0.0f),
+                new Vector3( 2.22474487139f,      -1.0f,                -2.22474487139f),
+                new Vector3( 2.22474487139f,       1.0f,                -2.22474487139f),
+                new Vector3( 3.0862664687972017f,  0.0f,                -1.1721513422464978f),
+                new Vector3( 1.1721513422464978f,  0.0f,                -3.0862664687972017f),
+                new Vector3( 2.22474487139f,      -1.0f,                 2.22474487139f),
+                new Vector3( 2.22474487139f,       1.0f,                 2.22474487139f),
+                new Vector3( 1.1721513422464978f,  0.0f,                 3.0862664687972017f),
+                new Vector3( 3.0862664687972017f,  0.0f,                 1.1721513422464978f),
+                new Vector3( 2.22474487139f,       2.22474487139f,      -1.0f),
+                new Vector3( 2.22474487139f,       2.22474487139f,       1.0f),
+                new Vector3( 3.0862664687972017f,  1.1721513422464978f,  0.0f),
+                new Vector3( 1.1721513422464978f,  3.0862664687972017f,  0.0f)
             };
-            for (int i = 0; i < grad3.Length; i++)
+            for (int i = 0; i < Vector3.Length; i++)
             {
-                grad3[i].dx /= N3; grad3[i].dy /= N3; grad3[i].dz /= N3;
+                Vector3[i] = Vector3[i] / N3;
             }
             for (int i = 0; i < PSIZE; i++)
             {
-                GRADIENTS_3D[i] = grad3[i % grad3.Length];
+                GRADIENTS_3D[i] = Vector3[i % Vector3.Length];
             }
         }
     }
