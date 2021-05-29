@@ -94,6 +94,21 @@ namespace Nintenlord.MonoGame.Geometry
             return new Vector2(0, v.Y);
         }
 
+        public static Vector2 GetRandomUnitVector2(this Random random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            var angle = random.NextDouble() * MathHelper.TwoPi;
+
+            return new Vector2(
+                (float)Math.Cos(angle),
+                (float)Math.Sin(angle)
+                );
+        }
+
         #endregion
 
         #region Vector3
@@ -198,7 +213,7 @@ namespace Nintenlord.MonoGame.Geometry
             return result.ToArray();
         }
 
-        public static Vector3 GetRandomUnitVector(this Random random)
+        public static Vector3 GetRandomUnitVector3(this Random random)
         {
             if (random is null)
             {
