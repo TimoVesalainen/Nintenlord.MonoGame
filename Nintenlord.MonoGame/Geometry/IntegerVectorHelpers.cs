@@ -55,6 +55,30 @@ namespace Nintenlord.MonoGame.Geometry
             return GetVectors(x, y, IntegerExtensions.GetIntegers(maxZ, minZ, -1));
         }
 
+        public static IEnumerable<IntegerVector3> GetRectX(int x, Rectangle rect)
+        {
+            foreach (var (y,z) in rect.GetPoints())
+            {
+                yield return new IntegerVector3(x, y, z);
+            }
+        }
+
+        public static IEnumerable<IntegerVector3> GetRectY(int y, Rectangle rect)
+        {
+            foreach (var (x, z) in rect.GetPoints())
+            {
+                yield return new IntegerVector3(x, y, z);
+            }
+        }
+
+        public static IEnumerable<IntegerVector3> GetRectZ(int z, Rectangle rect)
+        {
+            foreach (var (x, y) in rect.GetPoints())
+            {
+                yield return new IntegerVector3(x, y, z);
+            }
+        }
+
         public static IEnumerable<IntegerVector3> GetRadius(int r)
         {
             var range = IntegerExtensions.GetIntegers(-r, r);
