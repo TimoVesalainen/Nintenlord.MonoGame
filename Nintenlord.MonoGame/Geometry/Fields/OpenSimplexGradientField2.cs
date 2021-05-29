@@ -1,20 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nintenlord.MonoGame.Geometry.Fields
 {
     public sealed class OpenSimplexGradientField2 : IVectorField2iTo2v
     {
-        private const int PSIZE = 1 << 11;
-        private const int PMASK = PSIZE - 1;
+        private const int PERMUTATION_SIZE = 1 << 11;
+        private const int PERMUTATION_MASK = PERMUTATION_SIZE - 1;
 
-        static readonly Vector2[] GRADIENTS_2D;
+        static readonly Vector2[] gradients;
 
         static OpenSimplexGradientField2()
         {
-            GRADIENTS_2D = new Vector2[PSIZE];
+            gradients = new Vector2[PERMUTATION_SIZE];
             const float N2 = 0.01001634121365712f;
             const float c1a = 0.130526192220052f;
             const float c1b = 0.99144486137381f;
@@ -22,7 +19,7 @@ namespace Nintenlord.MonoGame.Geometry.Fields
             const float c2b = 0.923879532511287f;
             const float c3a = 0.608761429008721f;
             const float c3b = 0.793353340291235f;
-            Vector2[] Vector2 = {
+            Vector2[] gradientVectors = {
                 new Vector2( c1a,  c1b),
                 new Vector2( c2a,   c2b),
                 new Vector2( c3a,  c3b),
@@ -48,35 +45,35 @@ namespace Nintenlord.MonoGame.Geometry.Fields
                 new Vector2(-c2a,   c2b),
                 new Vector2(-c1a,  c1b)
             };
-            for (int i = 0; i < Vector2.Length; i++)
+            for (int i = 0; i < gradientVectors.Length; i++)
             {
-                Vector2[i] = Vector2[i] / N2;
+                gradientVectors[i] = gradientVectors[i] / N2;
             }
-            for (int i = 0; i < PSIZE; i++)
+            for (int i = 0; i < PERMUTATION_SIZE; i++)
             {
-                GRADIENTS_2D[i] = Vector2[i % Vector2.Length];
+                gradients[i] = gradientVectors[i % gradientVectors.Length];
             }
         }
 
-        private readonly short[] perm;
-        private readonly Vector2[] permVector2;
+        private readonly short[] permutation;
+        private readonly Vector2[] gradientPermutation;
 
         public OpenSimplexGradientField2(long seed)
         {
-            short[] source = new short[PSIZE];
+            short[] source = new short[PERMUTATION_SIZE];
             for (short i = 0; i < source.Length; i++)
             {
                 source[i] = i;
             }
 
-            for (int i = PSIZE - 1; i >= 0; i--)
+            for (int i = PERMUTATION_SIZE - 1; i >= 0; i--)
             {
                 seed = seed * 6364136223846793005L + 1442695040888963407L;
                 int r = (int)((seed + 31) % (i + 1));
                 if (r < 0)
                     r += (i + 1);
-                perm[i] = source[r];
-                permVector2[i] = GRADIENTS_2D[perm[i]];
+                permutation[i] = source[r];
+                gradientPermutation[i] = gradients[permutation[i]];
                 source[r] = source[i];
             }
         }
@@ -85,9 +82,9 @@ namespace Nintenlord.MonoGame.Geometry.Fields
 
         private Vector2 GetGradient(int x, int y)
         {
-            x &= PMASK;
-            y &= PMASK;
-            return permVector2[perm[x] ^ y];
+            x &= PERMUTATION_MASK;
+            y &= PERMUTATION_MASK;
+            return gradientPermutation[permutation[x] ^ y];
         }
     }
 }

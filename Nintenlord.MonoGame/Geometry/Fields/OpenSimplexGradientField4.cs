@@ -4,10 +4,10 @@ namespace Nintenlord.MonoGame.Geometry.Fields
 {
     public sealed class OpenSimplexGradientField4 : IVectorField4iTo4v
     {
-        private const int PSIZE = 1 << 11;
-        private const int PMASK = PSIZE - 1;
+        private const int PERMUTATION_SIZE = 1 << 11;
+        private const int PERMUTATION_MASK = PERMUTATION_SIZE - 1;
 
-        static readonly Vector4[] GRADIENTS_4D;
+        static readonly Vector4[] gradients;
 
         static OpenSimplexGradientField4()
         {
@@ -39,7 +39,7 @@ namespace Nintenlord.MonoGame.Geometry.Fields
             const float c7a = 0.03381941603233842f;
             const float c7b = 0.9982828964265062f;
 
-            Vector4[] Vector4 = {
+            Vector4[] gradientVectors = {
                 new Vector4(-c1b,    -c1a,  -c1a,  -c1a),
                 new Vector4(-c2c,   -c2b,   -c2b,    c2a),
                 new Vector4(-c2c,   -c2b,    c2a,  -c2b),
@@ -201,50 +201,49 @@ namespace Nintenlord.MonoGame.Geometry.Fields
                 new Vector4( c2c,    c2b,    c2b,   -c2a),
                 new Vector4( c1b,     c1a,   c1a,   c1a)
             };
-            for (int i = 0; i < Vector4.Length; i++)
+            for (int i = 0; i < gradientVectors.Length; i++)
             {
-                Vector4[i] = Vector4[i] / N4;
+                gradientVectors[i] = gradientVectors[i] / N4;
             }
-            GRADIENTS_4D = new Vector4[PSIZE];
-            for (int i = 0; i < GRADIENTS_4D.Length; i++)
+            gradients = new Vector4[PERMUTATION_SIZE];
+            for (int i = 0; i < gradients.Length; i++)
             {
-                GRADIENTS_4D[i] = Vector4[i % Vector4.Length];
+                gradients[i] = gradientVectors[i % gradientVectors.Length];
             }
         }
 
-        private readonly short[] perm;
-        private readonly Vector4[] permVector4;
+        private readonly short[] permutation;
+        private readonly Vector4[] gradientPermutation;
 
         public OpenSimplexGradientField4(long seed)
         {
-            short[] source = new short[PSIZE];
+            short[] source = new short[PERMUTATION_SIZE];
             for (short i = 0; i < source.Length; i++)
             {
                 source[i] = i;
             }
 
-            for (int i = PSIZE - 1; i >= 0; i--)
+            for (int i = PERMUTATION_SIZE - 1; i >= 0; i--)
             {
                 seed = seed * 6364136223846793005L + 1442695040888963407L;
                 int r = (int)((seed + 31) % (i + 1));
                 if (r < 0)
                     r += (i + 1);
-                perm[i] = source[r];
-                permVector4[i] = GRADIENTS_4D[perm[i]];
+                permutation[i] = source[r];
+                gradientPermutation[i] = gradients[permutation[i]];
                 source[r] = source[i];
             }
-
         }
 
         public Vector4 this[int x, int y, int z, int w] => GetGradient(x, y, z, w);
 
         private Vector4 GetGradient(int x, int y, int z, int w)
         {
-            x &= PMASK;
-            y &= PMASK;
-            z &= PMASK;
-            w &= PMASK;
-            return permVector4[perm[perm[perm[x] ^ y] ^ z] ^ w];
+            x &= PERMUTATION_MASK;
+            y &= PERMUTATION_MASK;
+            z &= PERMUTATION_MASK;
+            w &= PERMUTATION_MASK;
+            return gradientPermutation[permutation[permutation[permutation[x] ^ y] ^ z] ^ w];
         }
     }
 }
