@@ -1,0 +1,250 @@
+﻿using Microsoft.Xna.Framework;
+
+namespace Nintenlord.MonoGame.Geometry.Fields
+{
+    public sealed class OpenSimplexGradientField4 : IVectorField4iTo4v
+    {
+        private const int PSIZE = 1 << 11;
+        private const int PMASK = PSIZE - 1;
+
+        static readonly Vector4[] GRADIENTS_4D;
+
+        static OpenSimplexGradientField4()
+        {
+            const float N4 = 0.009202377986303158f;
+            const float c1a = 0.37968289875261624f;
+            const float c1b = 0.753341017856078f;
+
+            const float c2a = 0.12128480194602098f;
+            const float c2b = 0.4321472685365301f;
+            const float c2c = 0.7821684431180708f;
+
+            const float c3a = 0.044802370851755174f;
+            const float c3b = 0.508629699630796f;
+            const float c3c = 0.8586508742123365f;
+
+            const float c4a = 0.15296486218853164f;
+            const float c4b = 0.4004672082940195f;
+            const float c4c = 0.5029860367700724f;
+            const float c4d = 0.7504883828755602f;
+
+            const float c5a = 0.08164729285680945f;
+            const float c5b = 0.4553054119602712f;
+            const float c5c = 0.8828161875373585f;
+
+            const float c6a = 0.3239847771997537f;
+            const float c6b = 0.6740059517812944f;
+            const float c6c = 0.5794684678643381f;
+
+            const float c7a = 0.03381941603233842f;
+            const float c7b = 0.9982828964265062f;
+
+            Vector4[] Vector4 = {
+                new Vector4(-c1b,    -c1a,  -c1a,  -c1a),
+                new Vector4(-c2c,   -c2b,   -c2b,    c2a),
+                new Vector4(-c2c,   -c2b,    c2a,  -c2b),
+                new Vector4(-c2c,    c2a,  -c2b,   -c2b),
+                new Vector4(-c3c,   -c3b,     c3a,  c3a),
+                new Vector4(-c3c,    c3a, -c3b,     c3a),
+                new Vector4(-c3c,    c3a,  c3a, -c3b),
+                new Vector4(-c7b,   -c7a,  -c7a,  -c7a),
+                new Vector4(-c1a,  -c1b,    -c1a,  -c1a),
+                new Vector4(-c2b,   -c2c,   -c2b,    c2a),
+                new Vector4(-c2b,   -c2c,    c2a,  -c2b),
+                new Vector4( c2a,  -c2c,   -c2b,   -c2b),
+                new Vector4(-c3b,    -c3c,    c3a,  c3a),
+                new Vector4( c3a, -c3c,   -c3b,     c3a),
+                new Vector4( c3a, -c3c,    c3a, -c3b),
+                new Vector4(-c7a,  -c7b,   -c7a,  -c7a),
+                new Vector4(-c1a,  -c1a,  -c1b,    -c1a),
+                new Vector4(-c2b,   -c2b,   -c2c,    c2a),
+                new Vector4(-c2b,    c2a,  -c2c,   -c2b),
+                new Vector4( c2a,  -c2b,   -c2c,   -c2b),
+                new Vector4(-c3b,     c3a, -c3c,    c3a),
+                new Vector4( c3a, -c3b,    -c3c,    c3a),
+                new Vector4( c3a,  c3a, -c3c,   -c3b),
+                new Vector4(-c7a,  -c7a,  -c7b,   -c7a),
+                new Vector4(-c1a,  -c1a,  -c1a,  -c1b),
+                new Vector4(-c2b,   -c2b,    c2a,  -c2c),
+                new Vector4(-c2b,    c2a,  -c2b,   -c2c),
+                new Vector4( c2a,  -c2b,   -c2b,   -c2c),
+                new Vector4(-c3b,     c3a,  c3a, -c3c),
+                new Vector4( c3a, -c3b,     c3a, -c3c),
+                new Vector4( c3a,  c3a, -c3b,    -c3c),
+                new Vector4(-c7a,  -c7a,  -c7a,  -c7b),
+                new Vector4(-c6b,   -c6a,   -c6a,    c6c),
+                new Vector4(-c4d,   -c4b,    c4a,   c4c),
+                new Vector4(-c4d,    c4a,  -c4b,    c4c),
+                new Vector4(-c5c,    c5a,   c5a,   c5b),
+                new Vector4(-c5b,   -c5a,  -c5a,   c5c),
+                new Vector4(-c4c,   -c4a,   c4b,    c4d),
+                new Vector4(-c4c,    c4b,   -c4a,   c4d),
+                new Vector4(-c6c,    c6a,    c6a,    c6b),
+                new Vector4(-c6a,   -c6b,   -c6a,    c6c),
+                new Vector4(-c4b,   -c4d,    c4a,   c4c),
+                new Vector4( c4a,  -c4d,   -c4b,    c4c),
+                new Vector4( c5a,  -c5c,    c5a,   c5b),
+                new Vector4(-c5a,  -c5b,   -c5a,   c5c),
+                new Vector4(-c4a,  -c4c,    c4b,    c4d),
+                new Vector4( c4b,   -c4c,   -c4a,   c4d),
+                new Vector4( c6a,   -c6c,    c6a,    c6b),
+                new Vector4(-c6a,   -c6a,   -c6b,    c6c),
+                new Vector4(-c4b,    c4a,  -c4d,    c4c),
+                new Vector4( c4a,  -c4b,   -c4d,    c4c),
+                new Vector4( c5a,   c5a,  -c5c,    c5b),
+                new Vector4(-c5a,  -c5a,  -c5b,    c5c),
+                new Vector4(-c4a,   c4b,   -c4c,    c4d),
+                new Vector4( c4b,   -c4a,  -c4c,    c4d),
+                new Vector4( c6a,    c6a,   -c6c,    c6b),
+                new Vector4(-c6b,   -c6a,    c6c,   -c6a),
+                new Vector4(-c4d,   -c4b,    c4c,    c4a),
+                new Vector4(-c4d,    c4a,   c4c,   -c4b),
+                new Vector4(-c5c,    c5a,   c5b,    c5a),
+                new Vector4(-c5b,   -c5a,   c5c,   -c5a),
+                new Vector4(-c4c,   -c4a,   c4d,    c4b),
+                new Vector4(-c4c,    c4b,    c4d,   -c4a),
+                new Vector4(-c6c,    c6a,    c6b,    c6a),
+                new Vector4(-c6a,   -c6b,    c6c,   -c6a),
+                new Vector4(-c4b,   -c4d,    c4c,    c4a),
+                new Vector4( c4a,  -c4d,    c4c,   -c4b),
+                new Vector4( c5a,  -c5c,    c5b,    c5a),
+                new Vector4(-c5a,  -c5b,    c5c,   -c5a),
+                new Vector4(-c4a,  -c4c,    c4d,    c4b),
+                new Vector4( c4b,   -c4c,    c4d,   -c4a),
+                new Vector4( c6a,   -c6c,    c6b,    c6a),
+                new Vector4(-c6a,   -c6a,    c6c,   -c6b),
+                new Vector4(-c4b,    c4a,   c4c,   -c4d),
+                new Vector4( c4a,  -c4b,    c4c,   -c4d),
+                new Vector4( c5a,   c5a,   c5b,   -c5c),
+                new Vector4(-c5a,  -c5a,   c5c,   -c5b),
+                new Vector4(-c4a,   c4b,    c4d,   -c4c),
+                new Vector4( c4b,   -c4a,   c4d,   -c4c),
+                new Vector4( c6a,    c6a,    c6b,   -c6c),
+                new Vector4(-c6b,    c6c,   -c6a,   -c6a),
+                new Vector4(-c4d,    c4c,   -c4b,    c4a),
+                new Vector4(-c4d,    c4c,    c4a,  -c4b),
+                new Vector4(-c5c,    c5b,    c5a,   c5a),
+                new Vector4(-c5b,    c5c,   -c5a,  -c5a),
+                new Vector4(-c4c,    c4d,   -c4a,   c4b),
+                new Vector4(-c4c,    c4d,    c4b,   -c4a),
+                new Vector4(-c6c,    c6b,    c6a,    c6a),
+                new Vector4(-c6a,    c6c,   -c6b,   -c6a),
+                new Vector4(-c4b,    c4c,   -c4d,    c4a),
+                new Vector4( c4a,   c4c,   -c4d,   -c4b),
+                new Vector4( c5a,   c5b,   -c5c,    c5a),
+                new Vector4(-c5a,   c5c,   -c5b,   -c5a),
+                new Vector4(-c4a,   c4d,   -c4c,    c4b),
+                new Vector4( c4b,    c4d,   -c4c,   -c4a),
+                new Vector4( c6a,    c6b,   -c6c,    c6a),
+                new Vector4(-c6a,    c6c,   -c6a,   -c6b),
+                new Vector4(-c4b,    c4c,    c4a,  -c4d),
+                new Vector4( c4a,   c4c,   -c4b,   -c4d),
+                new Vector4( c5a,   c5b,    c5a,  -c5c),
+                new Vector4(-c5a,   c5c,   -c5a,  -c5b),
+                new Vector4(-c4a,   c4d,    c4b,   -c4c),
+                new Vector4( c4b,    c4d,   -c4a,  -c4c),
+                new Vector4( c6a,    c6b,    c6a,   -c6c),
+                new Vector4( c6c,   -c6b,   -c6a,   -c6a),
+                new Vector4( c4c,   -c4d,   -c4b,    c4a),
+                new Vector4( c4c,   -c4d,    c4a,  -c4b),
+                new Vector4( c5b,   -c5c,    c5a,   c5a),
+                new Vector4( c5c,   -c5b,   -c5a,  -c5a),
+                new Vector4( c4d,   -c4c,   -c4a,   c4b),
+                new Vector4( c4d,   -c4c,    c4b,   -c4a),
+                new Vector4( c6b,   -c6c,    c6a,    c6a),
+                new Vector4( c6c,   -c6a,   -c6b,   -c6a),
+                new Vector4( c4c,   -c4b,   -c4d,    c4a),
+                new Vector4( c4c,    c4a,  -c4d,   -c4b),
+                new Vector4( c5b,    c5a,  -c5c,    c5a),
+                new Vector4( c5c,   -c5a,  -c5b,   -c5a),
+                new Vector4( c4d,   -c4a,  -c4c,    c4b),
+                new Vector4( c4d,    c4b,   -c4c,   -c4a),
+                new Vector4( c6b,    c6a,   -c6c,    c6a),
+                new Vector4( c6c,   -c6a,   -c6a,   -c6b),
+                new Vector4( c4c,   -c4b,    c4a,  -c4d),
+                new Vector4( c4c,    c4a,  -c4b,   -c4d),
+                new Vector4( c5b,    c5a,   c5a,  -c5c),
+                new Vector4( c5c,   -c5a,  -c5a,  -c5b),
+                new Vector4( c4d,   -c4a,   c4b,   -c4c),
+                new Vector4( c4d,    c4b,   -c4a,  -c4c),
+                new Vector4( c6b,    c6a,    c6a,   -c6c),
+                new Vector4( c7a,   c7a,   c7a,   c7b),
+                new Vector4(-c3a, -c3a,  c3b,     c3c),
+                new Vector4(-c3a,  c3b,    -c3a,  c3c),
+                new Vector4(-c2a,   c2b,    c2b,    c2c),
+                new Vector4( c3b,    -c3a, -c3a,  c3c),
+                new Vector4( c2b,   -c2a,   c2b,    c2c),
+                new Vector4( c2b,    c2b,   -c2a,   c2c),
+                new Vector4( c1a,   c1a,   c1a,   c1b),
+                new Vector4( c7a,   c7a,   c7b,    c7a),
+                new Vector4(-c3a,  c3a,  c3c,    c3b),
+                new Vector4(-c3a,  c3b,     c3c,   -c3a),
+                new Vector4(-c2a,   c2b,    c2c,    c2b),
+                new Vector4( c3b,    -c3a,  c3c,   -c3a),
+                new Vector4( c2b,   -c2a,   c2c,    c2b),
+                new Vector4( c2b,    c2b,    c2c,   -c2a),
+                new Vector4( c1a,   c1a,   c1b,     c1a),
+                new Vector4( c7a,   c7b,    c7a,   c7a),
+                new Vector4(-c3a,  c3c,   -c3a,  c3b),
+                new Vector4(-c3a,  c3c,    c3b,    -c3a),
+                new Vector4(-c2a,   c2c,    c2b,    c2b),
+                new Vector4( c3b,     c3c,   -c3a, -c3a),
+                new Vector4( c2b,    c2c,   -c2a,   c2b),
+                new Vector4( c2b,    c2c,    c2b,   -c2a),
+                new Vector4( c1a,   c1b,     c1a,   c1a),
+                new Vector4( c7b,    c7a,   c7a,   c7a),
+                new Vector4( c3c,   -c3a, -c3a,  c3b),
+                new Vector4( c3c,   -c3a,  c3b,    -c3a),
+                new Vector4( c2c,   -c2a,   c2b,    c2b),
+                new Vector4( c3c,    c3b,    -c3a, -c3a),
+                new Vector4( c2c,    c2b,   -c2a,   c2b),
+                new Vector4( c2c,    c2b,    c2b,   -c2a),
+                new Vector4( c1b,     c1a,   c1a,   c1a)
+            };
+            for (int i = 0; i < Vector4.Length; i++)
+            {
+                Vector4[i] = Vector4[i] / N4;
+            }
+            GRADIENTS_4D = new Vector4[PSIZE];
+            for (int i = 0; i < GRADIENTS_4D.Length; i++)
+            {
+                GRADIENTS_4D[i] = Vector4[i % Vector4.Length];
+            }
+        }
+
+        private readonly short[] perm;
+        private readonly Vector4[] permVector4;
+
+        public OpenSimplexGradientField4(long seed)
+        {
+            short[] source = new short[PSIZE];
+            for (short i = 0; i < source.Length; i++)
+            {
+                source[i] = i;
+            }
+
+            for (int i = PSIZE - 1; i >= 0; i--)
+            {
+                seed = seed * 6364136223846793005L + 1442695040888963407L;
+                int r = (int)((seed + 31) % (i + 1));
+                if (r < 0)
+                    r += (i + 1);
+                perm[i] = source[r];
+                permVector4[i] = GRADIENTS_4D[perm[i]];
+                source[r] = source[i];
+            }
+
+        }
+
+        public Vector4 this[int x, int y, int z, int w] => GetGradient(x, y, z, w);
+
+        private Vector4 GetGradient(int x, int y, int z, int w)
+        {
+            x &= PMASK;
+            y &= PMASK;
+            z &= PMASK;
+            w &= PMASK;
+            return permVector4[perm[perm[perm[x] ^ y] ^ z] ^ w];
+        }
+    }
+}
