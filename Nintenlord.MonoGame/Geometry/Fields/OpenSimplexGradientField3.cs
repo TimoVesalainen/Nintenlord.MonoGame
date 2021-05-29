@@ -9,7 +9,6 @@ namespace Nintenlord.MonoGame.Geometry.Fields
     {
         private const int PSIZE = 1 << 11;
         private const int PMASK = PSIZE - 1;
-        private const float N3 = 0.030485933181293584f;
 
         static readonly Vector3[] GRADIENTS_3D;
 
@@ -19,6 +18,7 @@ namespace Nintenlord.MonoGame.Geometry.Fields
             const float c1 = 2.22474487139f;
             const float c2 = 3.0862664687972017f;
             const float c3 = 1.1721513422464978f;
+            const float N3 = 0.030485933181293584f;
             Vector3[] gradients = {
                 new Vector3(-c1, -c1, -1.0f),
                 new Vector3(-c1, -c1, 1.0f),
