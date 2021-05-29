@@ -3,6 +3,7 @@ using Nintenlord.Collections;
 using Nintenlord.Collections.Comparers;
 using Nintenlord.Utility;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nintenlord.MonoGame.Geometry
@@ -72,6 +73,28 @@ namespace Nintenlord.MonoGame.Geometry
                 );
         }
 
+        public static IEnumerable<Point> GetPoints(this Rectangle rect)
+        {
+            foreach (var y in rect.GetYs())
+            {
+                foreach (var x in rect.GetXs())
+                {
+                    yield return new Point(x, y);
+                }
+            }
+        }
+
+        public static IEnumerable<int> GetXs(this Rectangle rect)
+        {
+            return Enumerable.Range(rect.X, rect.Width);
+        }
+
+        public static IEnumerable<int> GetYs(this Rectangle rect)
+        {
+            return Enumerable.Range(rect.Y, rect.Height);
+        }
+
+        #region GetRects
 
         public static Rectangle[] GetRects(bool[] bools, int width, int amount)
         {
@@ -201,5 +224,6 @@ namespace Nintenlord.MonoGame.Geometry
             }
             return true;
         }
+        #endregion
     }
 }
