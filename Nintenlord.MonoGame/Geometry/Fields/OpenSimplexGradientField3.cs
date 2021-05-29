@@ -11,17 +11,11 @@ namespace Nintenlord.MonoGame.Geometry.Fields
         private const int PMASK = PSIZE - 1;
         private const float N3 = 0.030485933181293584f;
 
-        private readonly short[] perm;
-        private readonly Vector3[] permVector3;
-        private readonly Vector3[] GRADIENTS_3D;
+        static readonly Vector3[] GRADIENTS_3D;
 
-        public OpenSimplexGradientField3(long seed)
+        static OpenSimplexGradientField3()
         {
-            perm = new short[PSIZE];
-            permVector3 = new Vector3[PSIZE];
-            short[] source = new short[PSIZE];
-
-            GRADIENTS_3D = new Vector3[PSIZE];
+            var GRADIENTS_3D = new Vector3[PSIZE];
             Vector3[] gradients = {
                 new Vector3(-2.22474487139f,      -2.22474487139f,      -1.0f),
                 new Vector3(-2.22474487139f,      -2.22474487139f,       1.0f),
@@ -76,10 +70,20 @@ namespace Nintenlord.MonoGame.Geometry.Fields
             {
                 gradients[i] = gradients[i] / N3;
             }
-            for (int i = 0; i < PSIZE; i++)
+            for (int i = 0; i < GRADIENTS_3D.Length; i++)
             {
                 GRADIENTS_3D[i] = gradients[i % gradients.Length];
             }
+        }
+
+        private readonly short[] perm;
+        private readonly Vector3[] permVector3;
+
+        public OpenSimplexGradientField3(long seed)
+        {
+            perm = new short[PSIZE];
+            permVector3 = new Vector3[PSIZE];
+            short[] source = new short[PSIZE];
 
             for (short i = 0; i < PSIZE; i++)
                 source[i] = i;
