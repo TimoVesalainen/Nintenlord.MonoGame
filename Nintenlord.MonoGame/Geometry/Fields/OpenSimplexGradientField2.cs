@@ -2,6 +2,10 @@
 
 namespace Nintenlord.MonoGame.Geometry.Fields
 {
+    /// <summary>
+    /// Adopted from
+    /// https://github.com/KdotJPG/OpenSimplex2/blob/3c64be93f7fadf3d67fbe45e4be5595eb83ef427/csharp/OpenSimplex2F.cs
+    /// </summary>
     public sealed class OpenSimplexGradientField2 : IVectorField2iTo2v
     {
         private const int PERMUTATION_SIZE = 1 << 11;
