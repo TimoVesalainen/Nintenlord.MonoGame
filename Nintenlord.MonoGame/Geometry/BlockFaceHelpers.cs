@@ -119,7 +119,7 @@ namespace Nintenlord.MonoGame.Geometry
             return new IntegerVector3(x, y, z);
         }
 
-        public static Vector3 MoveTo(Vector3 vec, BlockFace faces, float moveAMount = 1)
+        public static Vector3 MoveTo(Vector3 vec, BlockFace faces, float moveAmount = 1)
         {
             float x = vec.X;
             float y = vec.Y;
@@ -127,27 +127,27 @@ namespace Nintenlord.MonoGame.Geometry
 
             if (faces.HasFlag(BlockFace.East))
             {
-                x += moveAMount;
+                x += moveAmount;
             }
             if (faces.HasFlag(BlockFace.West))
             {
-                x -= moveAMount;
+                x -= moveAmount;
             }
             if (faces.HasFlag(BlockFace.North))
             {
-                y += moveAMount;
+                y += moveAmount;
             }
             if (faces.HasFlag(BlockFace.South))
             {
-                y -= moveAMount;
+                y -= moveAmount;
             }
             if (faces.HasFlag(BlockFace.Up))
             {
-                z += moveAMount;
+                z += moveAmount;
             }
             if (faces.HasFlag(BlockFace.Down))
             {
-                z -= moveAMount;
+                z -= moveAmount;
             }
             return new Vector3(x, y, z);
         }
