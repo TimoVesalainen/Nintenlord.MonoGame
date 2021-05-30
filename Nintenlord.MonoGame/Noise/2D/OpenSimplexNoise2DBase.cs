@@ -4,6 +4,10 @@ using System;
 
 namespace Nintenlord.MonoGame.Noise
 {
+    /// <summary>
+    /// Adopted from
+    /// https://github.com/KdotJPG/OpenSimplex2/blob/3c64be93f7fadf3d67fbe45e4be5595eb83ef427/csharp/OpenSimplex2F.cs
+    /// </summary>
     public sealed class OpenSimplexNoise2DBase : INoise2D
     {
         readonly IVectorField2iTo2v gradients;
