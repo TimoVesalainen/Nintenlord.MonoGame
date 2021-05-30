@@ -157,7 +157,7 @@ namespace Nintenlord.MonoGame.Geometry
             return values.Select(x => x & filter);
         }
 
-        public static BlockFace GetOpposite(this BlockFace faces)
+        public static BlockFace GetComplement(this BlockFace faces)
         {
             return BlockFace.All ^ faces;
         }
