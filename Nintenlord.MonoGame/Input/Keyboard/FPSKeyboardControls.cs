@@ -41,6 +41,7 @@ namespace Nintenlord.MonoGame.Input.Keyboard
         public bool SpewItems { get; private set; }
         public bool ToggleFlying { get; private set; }
         public bool ToggleCollision { get; private set; }
+        public bool ToggleDrawDebugData { get; private set; }
 
         public override void Update(GameTime gameTime)
         {
@@ -110,6 +111,7 @@ namespace Nintenlord.MonoGame.Input.Keyboard
             SpewItems = Pressed(keyState, Keys.R);
             ToggleFlying = Pressed(keyState, Keys.F);
             ToggleCollision = Pressed(keyState, Keys.C);
+            ToggleDrawDebugData = Pressed(keyState, Keys.Z);
 
             previousState = keyState;
         }
