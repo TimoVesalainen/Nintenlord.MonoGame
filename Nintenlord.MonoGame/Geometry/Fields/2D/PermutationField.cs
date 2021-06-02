@@ -5,8 +5,7 @@ namespace Nintenlord.MonoGame.Geometry.Fields
 {
     public sealed class PermutationField : IVectorField2iTo2v
     {
-
-        readonly byte seed;
+        private readonly byte seed;
         private static readonly int[] permuteLookup = new int[512];
         private static readonly int[] permutationTable =
             new[]
@@ -31,7 +30,7 @@ namespace Nintenlord.MonoGame.Geometry.Fields
                     195, 78, 66, 215, 61, 156, 180
                 };
 
-        public Vector2 this[int x, int y] => GradientVector(x,y);
+        public Vector2 this[int x, int y] => GradientVector(x, y);
 
         public PermutationField(byte seed)
         {

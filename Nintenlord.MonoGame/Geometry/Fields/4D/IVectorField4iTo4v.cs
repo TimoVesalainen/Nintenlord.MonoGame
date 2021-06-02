@@ -2,8 +2,7 @@
 
 namespace Nintenlord.MonoGame.Geometry.Fields
 {
-    public interface IVectorField2iTo2v
+    public interface IVectorField4iTo4v : IField4i<Vector4>
     {
-        Vector2 this[int x, int y] { get; }
     }
 }

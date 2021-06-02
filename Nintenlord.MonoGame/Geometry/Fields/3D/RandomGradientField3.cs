@@ -5,8 +5,8 @@ namespace Nintenlord.MonoGame.Geometry.Fields
 {
     public sealed class RandomGradientField3 : IVectorField3iTo3v
     {
-        readonly Vector3[,,] gradients;
-        readonly int mask;
+        private readonly Vector3[,,] gradients;
+        private readonly int mask;
 
         public RandomGradientField3(int hexLength, Random random)
         {
@@ -30,6 +30,6 @@ namespace Nintenlord.MonoGame.Geometry.Fields
             return gradients[z & mask, y & mask, x & mask];
         }
 
-        public Vector3 this[int x, int y, int z] => GradientVector(x,y,z);
+        public Vector3 this[int x, int y, int z] => GradientVector(x, y, z);
     }
 }

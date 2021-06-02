@@ -5,8 +5,8 @@ namespace Nintenlord.MonoGame.Geometry.Fields
 {
     public sealed class RandomGradientField2 : IVectorField2iTo2v
     {
-        readonly Vector2[,] gradients;
-        readonly int mask;
+        private readonly Vector2[,] gradients;
+        private readonly int mask;
 
         public RandomGradientField2(int hexLength, Random random)
         {

@@ -10,8 +10,7 @@ namespace Nintenlord.MonoGame.Geometry.Fields
     {
         private const int PERMUTATION_SIZE = 1 << 11;
         private const int PERMUTATION_MASK = PERMUTATION_SIZE - 1;
-
-        static readonly Vector2[] gradients;
+        private static readonly Vector2[] gradients;
 
         static OpenSimplexGradientField2()
         {
@@ -77,7 +76,10 @@ namespace Nintenlord.MonoGame.Geometry.Fields
                 seed = seed * 6364136223846793005L + 1442695040888963407L;
                 int r = (int)((seed + 31) % (i + 1));
                 if (r < 0)
+                {
                     r += (i + 1);
+                }
+
                 permutation[i] = source[r];
                 gradientPermutation[i] = gradients[permutation[i]];
                 source[r] = source[i];
