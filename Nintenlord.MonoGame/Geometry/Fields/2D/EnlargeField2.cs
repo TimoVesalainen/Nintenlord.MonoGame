@@ -27,6 +27,16 @@ namespace Nintenlord.MonoGame.Geometry.Fields._2D
             {
                 var chunkX = Math.DivRem(x, modX, out var remainderX);
                 var chunkY = Math.DivRem(y, modY, out var remainderY);
+                while (remainderX < 0)
+                {
+                    chunkX--;
+                    remainderX += modX;
+                }
+                while (remainderY < 0)
+                {
+                    chunkY--;
+                    remainderY += modY;
+                }
 
                 if (remainderX == xToUseTile && remainderY == yToUseTile)
                 {
