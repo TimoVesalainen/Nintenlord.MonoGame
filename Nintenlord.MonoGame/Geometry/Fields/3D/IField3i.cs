@@ -12,6 +12,11 @@ namespace Nintenlord.MonoGame.Geometry.Fields
 
     public static class Field3iHelpers
     {
+        public static T Get<T>(this IField3i<T> field, IntegerVector3 vector)
+        {
+            return field[vector.X, vector.Y, vector.Z];
+        }
+
         public static IField3i<TOut> Select<TIn, TOut>(this IField3i<TIn> field, Func<TIn, TOut> selector)
         {
             return new SelectField3i<TIn, TOut>(field, selector);
