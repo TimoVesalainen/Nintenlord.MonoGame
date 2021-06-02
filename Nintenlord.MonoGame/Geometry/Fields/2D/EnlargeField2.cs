@@ -13,6 +13,23 @@ namespace Nintenlord.MonoGame.Geometry.Fields._2D
 
         public EnlargeField2(IField2i<T> original, T filler, int modX, int modY, int xToUseTile, int yToUseTile)
         {
+            if (modX <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(modX), "Modulus can't be non-positive");
+            }
+            if (modY <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(modY), "Modulus can't be non-positive");
+            }
+            if (xToUseTile < 0 || xToUseTile >= modX)
+            {
+                throw new ArgumentOutOfRangeException(nameof(xToUseTile), "Position in chunk to use needs to be in range [0..modX)");
+            }
+            if (yToUseTile < 0 || yToUseTile >= modY)
+            {
+                throw new ArgumentOutOfRangeException(nameof(yToUseTile), "Position in chunk to use needs to be in range [0..modY)");
+            }
+
             this.original = original;
             this.filler = filler;
             this.modX = modX;
