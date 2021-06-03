@@ -45,7 +45,7 @@ namespace Nintenlord.MonoGame.Geometry.Fields
             }
             else
             {
-                return new TranslateField<T>(field, x, y, z);
+                return new TranslateField3<T>(field, x, y, z);
             }
         }
     }

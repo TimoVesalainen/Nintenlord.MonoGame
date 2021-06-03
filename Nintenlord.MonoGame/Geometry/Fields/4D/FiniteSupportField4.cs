@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Nintenlord.MonoGame.Geometry.Fields._4D
-{{
+{
     public sealed class FiniteSupportField4<T> : IField4i<T>
     {
         readonly int startX;
