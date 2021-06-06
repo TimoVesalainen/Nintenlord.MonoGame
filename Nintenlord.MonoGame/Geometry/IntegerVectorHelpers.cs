@@ -217,5 +217,29 @@ namespace Nintenlord.MonoGame.Geometry
             }
             yield return IntegerVector3.MinVector;
         }
+
+        public static (IntegerVector3 min, IntegerVector3 max) GetSmallestBox(this IEnumerable<IntegerVector3> vectors)
+        {
+            if (vectors is null)
+            {
+                throw new ArgumentNullException(nameof(vectors));
+            }
+
+            IntegerVector3 min = IntegerVector3.MaxVector;
+            IntegerVector3 max = IntegerVector3.MinVector;
+
+            foreach (var vector in vectors)
+            {
+                min.X = Math.Min(vector.X, min.X);
+                min.Y = Math.Min(vector.Y, min.Y);
+                min.Z = Math.Min(vector.Z, min.Z);
+
+                max.X = Math.Max(vector.X, max.X);
+                max.Y = Math.Max(vector.Y, max.Y);
+                max.Z = Math.Max(vector.Z, max.Z);
+            }
+
+            return (min, max);
+        }
     }
 }
