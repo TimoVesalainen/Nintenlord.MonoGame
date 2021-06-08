@@ -438,5 +438,17 @@ namespace Nintenlord.MonoGame.Geometry
                 yield return 7;
             }
         }
+
+        public static IEnumerable<BlockFace> GetIndividualFaces()
+        {
+            yield return BlockFace.East;
+            yield return BlockFace.West;
+
+            yield return BlockFace.North;
+            yield return BlockFace.South;
+
+            yield return BlockFace.Up;
+            yield return BlockFace.Down;
+        }
     }
 }
