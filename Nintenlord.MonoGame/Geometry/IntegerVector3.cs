@@ -1,12 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Nintenlord.MonoGame.Geometry
 {
     [DataContract]
+    [DebuggerDisplay("[{X},{Y},{Z}]")]
     public struct IntegerVector3 : IEquatable<IntegerVector3>
     {
         private static readonly IntegerVector3 zero = new IntegerVector3(0, 0, 0);
