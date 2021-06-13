@@ -254,5 +254,23 @@ namespace Nintenlord.MonoGame.Geometry
 
             return (min, max);
         }
+
+        public static int GetCubeAmount(int radius)
+        {
+            return (2 * radius - 1) * (2 * radius - 1) * (2 * radius - 1);
+        }
+
+        public static int GetHollowCubeAmount(int radius)
+        {
+            if (radius == 1)
+            {
+                return 1;//We say this means a single cube
+            }
+
+            int faceRadius = (2 * radius - 3);
+            return 8 //Corners
+                + 12 * faceRadius //Edges
+                + 6 * faceRadius * faceRadius; //Faces
+        }
     }
 }
