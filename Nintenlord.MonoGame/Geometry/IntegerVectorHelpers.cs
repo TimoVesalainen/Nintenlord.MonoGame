@@ -175,6 +175,19 @@ namespace Nintenlord.MonoGame.Geometry
             return GetCube(min, max);
         }
 
+        public static IEnumerable<IntegerVector3> GetAllVectorsToRange(int maxRange)
+        {
+            yield return IntegerVector3.Zero;
+
+            for (int i = 1; i <= maxRange; i++)
+            {
+                foreach (var vector in GetRadiusHollow(i))
+                {
+                    yield return vector;
+                }
+            }
+        }
+
         public static IEnumerable<IntegerVector3> GetAllVectors()
         {
             yield return IntegerVector3.Zero;
