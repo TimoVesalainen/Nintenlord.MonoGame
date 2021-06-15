@@ -3,7 +3,7 @@ using System;
 
 namespace Nintenlord.MonoGame.Utility
 {
-    public struct RadianAngle
+    public readonly struct RadianAngle
     {
         public static readonly RadianAngle Zero = new RadianAngle(0);
         public static readonly RadianAngle Pi = new RadianAngle(MathHelper.Pi);
