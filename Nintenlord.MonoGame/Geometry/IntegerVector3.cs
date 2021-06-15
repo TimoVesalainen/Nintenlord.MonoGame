@@ -9,7 +9,7 @@ namespace Nintenlord.MonoGame.Geometry
 {
     [DataContract]
     [DebuggerDisplay("[{X},{Y},{Z}]")]
-    public struct IntegerVector3 : IEquatable<IntegerVector3>
+    public readonly struct IntegerVector3 : IEquatable<IntegerVector3>
     {
         private static readonly IntegerVector3 zero = new IntegerVector3(0, 0, 0);
         private static readonly IntegerVector3 one = new IntegerVector3(1, 1, 1);
@@ -20,11 +20,11 @@ namespace Nintenlord.MonoGame.Geometry
         private static readonly IntegerVector3 max = new IntegerVector3(int.MaxValue, int.MaxValue, int.MaxValue);
 
         [DataMember]
-        public int X;
+        public readonly int X;
         [DataMember]
-        public int Y;
+        public readonly int Y;
         [DataMember]
-        public int Z;
+        public readonly int Z;
 
         public IntegerVector3(int x, int y, int z)
         {
@@ -68,13 +68,18 @@ namespace Nintenlord.MonoGame.Geometry
 
         public static IntegerVector3 MaxVector => max;
 
-        public bool IsInSquare(IntegerVector3 start, IntegerVector3 size)
+        public bool IsInSquare(in IntegerVector3 start, in IntegerVector3 size)
         {
             IntegerVector3 end = start + size;
             return
                 X >= start.X && X < end.X &&
                 Y >= start.Y && Y < end.Y &&
                 Z >= start.Z && Z < end.Z;
+        }
+
+        public IntegerVector3 With(int? x = null, int? y = null, int? z = null)
+        {
+            return new IntegerVector3(x ?? X, y ?? Y, z ?? Z);
         }
 
         public void Deconstruct(out int x, out int y, out int z)
@@ -86,33 +91,23 @@ namespace Nintenlord.MonoGame.Geometry
 
         #region Static operators
 
-        public static IntegerVector3 Sign(IntegerVector3 a)
+        public static IntegerVector3 Sign(in IntegerVector3 a)
         {
-            Sign(ref a);
-            return a;
+            var x = Math.Sign(a.X);
+            var y = Math.Sign(a.Y);
+            var z = Math.Sign(a.Z);
+            return new IntegerVector3(x,y,z);
         }
 
-        public static void Sign(ref IntegerVector3 a)
+        public static IntegerVector3 Abs(in IntegerVector3 a)
         {
-            a.X = Math.Sign(a.X);
-            a.Y = Math.Sign(a.Y);
-            a.Z = Math.Sign(a.Z);
+            var x = Math.Abs(a.X);
+            var y = Math.Abs(a.Y);
+            var z = Math.Abs(a.Z);
+            return new IntegerVector3(x, y, z);
         }
 
-        public static IntegerVector3 Abs(IntegerVector3 a)
-        {
-            Abs(ref a);
-            return a;
-        }
-
-        public static void Abs(ref IntegerVector3 a)
-        {
-            a.X = Math.Abs(a.X);
-            a.Y = Math.Abs(a.Y);
-            a.Z = Math.Abs(a.Z);
-        }
-
-        public static IntegerVector3 Max(IntegerVector3 a, IntegerVector3 b)
+        public static IntegerVector3 Max(in IntegerVector3 a, in IntegerVector3 b)
         {
             return new IntegerVector3(
                 Math.Max(a.X, b.X),
@@ -158,9 +153,9 @@ namespace Nintenlord.MonoGame.Geometry
             return Math.Sqrt(DotProduct(a, a));
         }
 
-        public static void Plus(ref IntegerVector3 a, ref IntegerVector3 b, out IntegerVector3 result)
+        public static IntegerVector3 Plus(in IntegerVector3 a, in IntegerVector3 b)
         {
-            result = new IntegerVector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+            return new IntegerVector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
         }
 
         public static IEnumerable<IntegerVector3> Plus(IntegerVector3 a, IEnumerable<IntegerVector3> u)
@@ -173,99 +168,94 @@ namespace Nintenlord.MonoGame.Geometry
             return u.Select(x => a - x);
         }
 
-        public static void Subtract(ref IntegerVector3 a, ref IntegerVector3 b, out IntegerVector3 result)
+        public static IntegerVector3 Subtract(in IntegerVector3 a, in IntegerVector3 b)
         {
-            result = new IntegerVector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+            return new IntegerVector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
         }
 
-        public static void Multiply(ref IntegerVector3 a, ref IntegerVector3 b, out IntegerVector3 result)
+        public static IntegerVector3 Multiply(in IntegerVector3 a, in IntegerVector3 b)
         {
-            result = new IntegerVector3(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+            return new IntegerVector3(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
         }
 
-        public static void Multiply(ref IntegerVector3 a, int b, out IntegerVector3 result)
+        public static IntegerVector3 Multiply(in IntegerVector3 a, int b)
         {
-            result = new IntegerVector3(a.X * b, a.Y * b, a.Z * b);
+            return new IntegerVector3(a.X * b, a.Y * b, a.Z * b);
         }
 
-        public static void Multiply(int a, ref IntegerVector3 b, out IntegerVector3 result)
+        public static IntegerVector3 Divide(in IntegerVector3 a, int b)
         {
-            result = new IntegerVector3(a * b.X, a * b.Y, a * b.Z);
+            return new IntegerVector3(a.X / b, a.Y / b, a.Z / b);
         }
 
-        public static void Divide(ref IntegerVector3 a, int b, out IntegerVector3 result)
+        public static IntegerVector3 Divide(in IntegerVector3 a, in IntegerVector3 b)
         {
-            result = new IntegerVector3(a.X / b, a.Y / b, a.Z / b);
+            return new IntegerVector3(a.X / b.X, a.Y / b.Y, a.Z / b.Z);
         }
 
-        public static void Divide(ref IntegerVector3 a, ref IntegerVector3 b, out IntegerVector3 result)
+        public static IntegerVector3 Modulus(in IntegerVector3 a, int b)
         {
-            result = new IntegerVector3(a.X / b.X, a.Y / b.Y, a.Z / b.Z);
+            return new IntegerVector3(a.X % b, a.Y % b, a.Z % b);
         }
 
-        public static void Modulus(ref IntegerVector3 a, int b, out IntegerVector3 result)
+        public static IntegerVector3 Modulus(in IntegerVector3 a, in IntegerVector3 b)
         {
-            result = new IntegerVector3(a.X % b, a.Y % b, a.Z % b);
+            return new IntegerVector3(a.X % b.X, a.Y % b.Y, a.Z % b.Z);
         }
 
-        public static void Modulus(ref IntegerVector3 a, ref IntegerVector3 b, out IntegerVector3 result)
+        public static IntegerVector3 And(in IntegerVector3 a, in IntegerVector3 b)
         {
-            result = new IntegerVector3(a.X % b.X, a.Y % b.Y, a.Z % b.Z);
+            return new IntegerVector3(a.X & b.X, a.Y & b.Y, a.Z & b.Z);
         }
 
-        public static void And(ref IntegerVector3 a, ref IntegerVector3 b, out IntegerVector3 result)
+        public static IntegerVector3 And(in IntegerVector3 a, int b)
         {
-            result = new IntegerVector3(a.X & b.X, a.Y & b.Y, a.Z & b.Z);
+            return new IntegerVector3(a.X & b, a.Y & b, a.Z & b);
         }
 
-        public static void And(ref IntegerVector3 a, int b, out IntegerVector3 result)
+        public static IntegerVector3 Or(in IntegerVector3 a, int b)
         {
-            result = new IntegerVector3(a.X & b, a.Y & b, a.Z & b);
+            return new IntegerVector3(a.X | b, a.Y | b, a.Z | b);
         }
 
-        public static void Or(ref IntegerVector3 a, int b, out IntegerVector3 result)
+        public static IntegerVector3 Or(in IntegerVector3 a, in IntegerVector3 b)
         {
-            result = new IntegerVector3(a.X | b, a.Y | b, a.Z | b);
+            return new IntegerVector3(a.X | b.X, a.Y | b.Y, a.Z | b.Z);
         }
 
-        public static void Or(ref IntegerVector3 a, ref IntegerVector3 b, out IntegerVector3 result)
+        public static IntegerVector3 Xor(in IntegerVector3 a, int b)
         {
-            result = new IntegerVector3(a.X | b.X, a.Y | b.Y, a.Z | b.Z);
+            return new IntegerVector3(a.X ^ b, a.Y ^ b, a.Z ^ b);
         }
 
-        public static void Xor(ref IntegerVector3 a, int b, out IntegerVector3 result)
+        public static IntegerVector3 Xor(in IntegerVector3 a, in IntegerVector3 b)
         {
-            result = new IntegerVector3(a.X ^ b, a.Y ^ b, a.Z ^ b);
+            return new IntegerVector3(a.X ^ b.X, a.Y ^ b.Y, a.Z ^ b.Z);
         }
 
-        public static void Xor(ref IntegerVector3 a, ref IntegerVector3 b, out IntegerVector3 result)
+        public static IntegerVector3 Minus(in IntegerVector3 a)
         {
-            result = new IntegerVector3(a.X ^ b.X, a.Y ^ b.Y, a.Z ^ b.Z);
+            return new IntegerVector3(-a.X, -a.Y, -a.Z);
         }
 
-        public static void Minus(ref IntegerVector3 a, out IntegerVector3 result)
+        public static IntegerVector3 LeftShift(in IntegerVector3 a, in IntegerVector3 b)
         {
-            result = new IntegerVector3(-a.X, -a.Y, -a.Z);
+            return new IntegerVector3(a.X << b.X, a.Y << b.Y, a.Z << b.Z);
         }
 
-        public static void LeftShift(ref IntegerVector3 a, ref IntegerVector3 b, out IntegerVector3 result)
+        public static IntegerVector3 LeftShift(in IntegerVector3 a, int b)
         {
-            result = new IntegerVector3(a.X << b.X, a.Y << b.Y, a.Z << b.Z);
+            return new IntegerVector3(a.X << b, a.Y << b, a.Z << b);
         }
 
-        public static void LeftShift(ref IntegerVector3 a, int b, out IntegerVector3 result)
+        public static IntegerVector3 RightShift(in IntegerVector3 a, in IntegerVector3 b)
         {
-            result = new IntegerVector3(a.X << b, a.Y << b, a.Z << b);
+            return new IntegerVector3(a.X >> b.X, a.Y >> b.Y, a.Z >> b.Z);
         }
 
-        public static void RightShift(ref IntegerVector3 a, ref IntegerVector3 b, out IntegerVector3 result)
+        public static IntegerVector3 RightShift(in IntegerVector3 a, int b)
         {
-            result = new IntegerVector3(a.X >> b.X, a.Y >> b.Y, a.Z >> b.Z);
-        }
-
-        public static void RightShift(ref IntegerVector3 a, int b, out IntegerVector3 result)
-        {
-            result = new IntegerVector3(a.X >> b, a.Y >> b, a.Z >> b);
+            return new IntegerVector3(a.X >> b, a.Y >> b, a.Z >> b);
         }
 
         public static IntegerVector3 Floor(Vector3 v)
@@ -292,147 +282,129 @@ namespace Nintenlord.MonoGame.Geometry
 
         #region Operators
 
-        public static IntegerVector3 operator +(IntegerVector3 a, IntegerVector3 b)
-        {
-            Plus(ref a, ref b, out IntegerVector3 result);
-            return result;
-        }
-
-        public static IEnumerable<IntegerVector3> operator +(IntegerVector3 a, IEnumerable<IntegerVector3> b)
+        public static IntegerVector3 operator +(in IntegerVector3 a, in IntegerVector3 b)
         {
             return Plus(a, b);
         }
 
-        public static IEnumerable<IntegerVector3> operator +(IEnumerable<IntegerVector3> a, IntegerVector3 b)
+        public static IEnumerable<IntegerVector3> operator +(in IntegerVector3 a, IEnumerable<IntegerVector3> b)
+        {
+            return Plus(a, b);
+        }
+
+        public static IEnumerable<IntegerVector3> operator +(IEnumerable<IntegerVector3> a, in IntegerVector3 b)
         {
             return Plus(b, a);
         }
 
-        public static IntegerVector3 operator -(IntegerVector3 a, IntegerVector3 b)
+        public static IntegerVector3 operator -(in IntegerVector3 a, in IntegerVector3 b)
         {
-            Subtract(ref a, ref b, out IntegerVector3 result);
-            return result;
+            return Subtract(a, b);
         }
 
-        public static IEnumerable<IntegerVector3> operator -(IntegerVector3 a, IEnumerable<IntegerVector3> b)
+        public static IEnumerable<IntegerVector3> operator -(in IntegerVector3 a, IEnumerable<IntegerVector3> b)
         {
             return Minus(a, b);
         }
 
-        public static IEnumerable<IntegerVector3> operator -(IEnumerable<IntegerVector3> a, IntegerVector3 b)
+        public static IEnumerable<IntegerVector3> operator -(IEnumerable<IntegerVector3> a, in IntegerVector3 b)
         {
             return Minus(b, a);
         }
 
-        public static IntegerVector3 operator -(IntegerVector3 a)
+        public static IntegerVector3 operator -(in IntegerVector3 a)
         {
-            Minus(ref a, out IntegerVector3 result);
-            return result;
+            return Minus(a);
         }
 
-        public static IntegerVector3 operator *(IntegerVector3 a, IntegerVector3 b)
+        public static IntegerVector3 operator *(in IntegerVector3 a, in IntegerVector3 b)
         {
-            Multiply(ref a, ref b, out IntegerVector3 result);
-            return result;
+            return Multiply(a, b);
         }
 
-        public static IntegerVector3 operator *(int a, IntegerVector3 b)
+        public static IntegerVector3 operator *(int a, in IntegerVector3 b)
         {
-            Multiply(a, ref b, out IntegerVector3 result);
-            return result;
+            return Multiply(b, a);
         }
 
-        public static IntegerVector3 operator *(IntegerVector3 a, int b)
+        public static IntegerVector3 operator *(in IntegerVector3 a, int b)
         {
-            Multiply(ref a, b, out IntegerVector3 result);
-            return result;
+            return Multiply(a, b);
         }
 
-        public static IntegerVector3 operator /(IntegerVector3 a, IntegerVector3 b)
+        public static IntegerVector3 operator /(in IntegerVector3 a, in IntegerVector3 b)
         {
-            Divide(ref a, ref b, out IntegerVector3 result);
-            return result;
+            return Divide(a, b);
         }
 
-        public static IntegerVector3 operator /(IntegerVector3 a, int b)
+        public static IntegerVector3 operator /(in IntegerVector3 a, int b)
         {
-            Divide(ref a, b, out IntegerVector3 result);
-            return result;
+            return Divide(a, b);
         }
 
-        public static IntegerVector3 operator %(IntegerVector3 a, IntegerVector3 b)
+        public static IntegerVector3 operator %(in IntegerVector3 a, in IntegerVector3 b)
         {
-            Modulus(ref a, ref b, out IntegerVector3 result);
-            return result;
+            return Modulus(a, b);
         }
 
-        public static IntegerVector3 operator %(IntegerVector3 a, int b)
+        public static IntegerVector3 operator %(in IntegerVector3 a, int b)
         {
-            Modulus(ref a, b, out IntegerVector3 result);
-            return result;
+            return Modulus(a, b);
         }
 
-        public static IntegerVector3 operator &(IntegerVector3 a, IntegerVector3 b)
+        public static IntegerVector3 operator &(in IntegerVector3 a, in IntegerVector3 b)
         {
-            And(ref a, ref b, out IntegerVector3 result);
-            return result;
+            return And(a, b);
         }
 
-        public static IntegerVector3 operator &(IntegerVector3 a, int b)
+        public static IntegerVector3 operator &(in IntegerVector3 a, int b)
         {
-            And(ref a, b, out IntegerVector3 result);
-            return result;
+            return And(a, b);
         }
 
-        public static IntegerVector3 operator |(IntegerVector3 a, IntegerVector3 b)
+        public static IntegerVector3 operator |(in IntegerVector3 a, in IntegerVector3 b)
         {
-            Or(ref a, ref b, out IntegerVector3 result);
-            return result;
+            return Or(a, b);
         }
 
-        public static IntegerVector3 operator |(IntegerVector3 a, int b)
+        public static IntegerVector3 operator |(in IntegerVector3 a, int b)
         {
-            Or(ref a, b, out IntegerVector3 result);
-            return result;
+            return Or(a, b);
         }
 
-        public static IntegerVector3 operator ^(IntegerVector3 a, IntegerVector3 b)
+        public static IntegerVector3 operator ^(in IntegerVector3 a, in IntegerVector3 b)
         {
-            Xor(ref a, ref b, out IntegerVector3 result);
-            return result;
+            return Xor(a, b);
         }
 
-        public static IntegerVector3 operator ^(IntegerVector3 a, int b)
+        public static IntegerVector3 operator ^(in IntegerVector3 a, int b)
         {
-            Xor(ref a, b, out IntegerVector3 result);
-            return result;
+            return Xor(a, b);
         }
 
-        public static IntegerVector3 operator >>(IntegerVector3 a, int b)
+        public static IntegerVector3 operator >>(in IntegerVector3 a, int b)
         {
-            RightShift(ref a, b, out IntegerVector3 result);
-            return result;
+            return RightShift(a, b);
         }
 
-        public static IntegerVector3 operator <<(IntegerVector3 a, int b)
+        public static IntegerVector3 operator <<(in IntegerVector3 a, int b)
         {
-            LeftShift(ref a, b, out IntegerVector3 result);
-            return result;
+            return LeftShift(a, b);
         }
 
-        public static bool operator ==(IntegerVector3 a, IntegerVector3 b)
+        public static bool operator ==(in IntegerVector3 a, in IntegerVector3 b)
         {
             return a.X == b.X && a.Y == b.Y && a.Z == b.Z;
         }
 
-        public static bool operator !=(IntegerVector3 a, IntegerVector3 b)
+        public static bool operator !=(in IntegerVector3 a, in IntegerVector3 b)
         {
             return a.X != b.X || a.Y != b.Y || a.Z != b.Z;
         }
 
         #endregion
 
-        public static explicit operator Vector3(IntegerVector3 a)
+        public static explicit operator Vector3(in IntegerVector3 a)
         {
             return new Vector3(a.X, a.Y, a.Z);
         }
@@ -442,7 +414,7 @@ namespace Nintenlord.MonoGame.Geometry
             return new IntegerVector3((int)a.X, (int)a.Y, (int)a.Z);
         }
 
-        public static explicit operator Point(IntegerVector3 a)
+        public static explicit operator Point(in IntegerVector3 a)
         {
             return new Point(a.X, a.Y);
         }
@@ -462,12 +434,12 @@ namespace Nintenlord.MonoGame.Geometry
             return new IntegerVector3(tuple.Item1, tuple.Item2, tuple.Item3);
         }
 
-        public static implicit operator (int x, int y, int z)(IntegerVector3 vector)
+        public static implicit operator (int x, int y, int z)(in IntegerVector3 vector)
         {
             return (vector.X, vector.Y, vector.Z);
         }
 
-        public static implicit operator Tuple<int, int, int>(IntegerVector3 vector)
+        public static implicit operator Tuple<int, int, int>(in IntegerVector3 vector)
         {
             return Tuple.Create(vector.X, vector.Y, vector.Z);
         }

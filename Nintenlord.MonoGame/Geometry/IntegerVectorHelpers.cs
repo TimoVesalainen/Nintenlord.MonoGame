@@ -238,21 +238,21 @@ namespace Nintenlord.MonoGame.Geometry
                 throw new ArgumentNullException(nameof(vectors));
             }
 
-            IntegerVector3 min = IntegerVector3.MaxVector;
-            IntegerVector3 max = IntegerVector3.MinVector;
+            var (minX, minY, minZ) = IntegerVector3.MaxVector;
+            var (maxX, maxY, maxZ) = IntegerVector3.MinVector;
 
             foreach (var vector in vectors)
             {
-                min.X = Math.Min(vector.X, min.X);
-                min.Y = Math.Min(vector.Y, min.Y);
-                min.Z = Math.Min(vector.Z, min.Z);
+                minX = Math.Min(vector.X, minX);
+                minY = Math.Min(vector.Y, minY);
+                minZ = Math.Min(vector.Z, minZ);
 
-                max.X = Math.Max(vector.X, max.X);
-                max.Y = Math.Max(vector.Y, max.Y);
-                max.Z = Math.Max(vector.Z, max.Z);
+                maxX = Math.Max(vector.X, maxX);
+                maxY = Math.Max(vector.Y, maxY);
+                maxZ = Math.Max(vector.Z, maxZ);
             }
 
-            return (min, max);
+            return (new IntegerVector3(minX, minY, minZ), new IntegerVector3(maxX, maxY, maxZ));
         }
 
         public static int GetCubeAmount(int radius)
