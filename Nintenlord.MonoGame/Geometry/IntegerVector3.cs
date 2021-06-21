@@ -71,6 +71,10 @@ namespace Nintenlord.MonoGame.Geometry
         public bool IsInSquare(in IntegerVector3 start, in IntegerVector3 size)
         {
             IntegerVector3 end = start + size;
+            return IsBetween(start, end);
+        }
+        public bool IsBetween(in IntegerVector3 start, in IntegerVector3 end)
+        {
             return
                 X >= start.X && X < end.X &&
                 Y >= start.Y && Y < end.Y &&
