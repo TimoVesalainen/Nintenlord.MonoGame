@@ -1,4 +1,4 @@
-﻿using Nintenlord.MonoGame.Geometry;
+﻿using Nintenlord.MonoGame.Geometry.Vectors;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

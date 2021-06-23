@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using Nintenlord.MonoGame.Geometry.Vectors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Nintenlord.MonoGame.Geometry
+namespace Nintenlord.MonoGame.Geometry.Cubes
 {
     /// <summary>
     ///     In your face!
@@ -228,7 +229,7 @@ namespace Nintenlord.MonoGame.Geometry
                 var corner2 = new Vector3(box.Max.X, box.Min.Y, box.Max.Z);
                 var corner3 = new Vector3(box.Max.X, box.Min.Y, box.Min.Z);
                 var corner4 = new Vector3(box.Max.X, box.Max.Y, box.Min.Z);
-                yield return new [] { corner1, corner2, corner3, corner4 };
+                yield return new[] { corner1, corner2, corner3, corner4 };
             }
 
             if (faces.HasFlag(BlockFace.West))
@@ -237,7 +238,7 @@ namespace Nintenlord.MonoGame.Geometry
                 var corner2 = new Vector3(box.Min.X, box.Min.Y, box.Max.Z);
                 var corner3 = new Vector3(box.Min.X, box.Max.Y, box.Max.Z);
                 var corner4 = new Vector3(box.Min.X, box.Max.Y, box.Min.Z);
-                yield return new [] { corner1, corner2, corner3, corner4 };
+                yield return new[] { corner1, corner2, corner3, corner4 };
             }
 
             if (faces.HasFlag(BlockFace.North))
@@ -246,7 +247,7 @@ namespace Nintenlord.MonoGame.Geometry
                 var corner2 = new Vector3(box.Max.X, box.Max.Y, box.Min.Z);
                 var corner3 = new Vector3(box.Min.X, box.Max.Y, box.Min.Z);
                 var corner4 = new Vector3(box.Min.X, box.Max.Y, box.Max.Z);
-                yield return new [] { corner1, corner2, corner3, corner4 };
+                yield return new[] { corner1, corner2, corner3, corner4 };
             }
 
             if (faces.HasFlag(BlockFace.South))
@@ -274,7 +275,7 @@ namespace Nintenlord.MonoGame.Geometry
                         bool isFirstX = x == 0;
                         bool isLastX = x == blocks.GetLength(0) - 1;
 
-                        var item = blocks[x, y, z];     
+                        var item = blocks[x, y, z];
                         if (isSolid(item))
                         {
                             BlockFace visibleFaces = BlockFace.None;
@@ -355,7 +356,7 @@ namespace Nintenlord.MonoGame.Geometry
         {
             var corners = box.GetCorners();
 
-            foreach (var index in GetFaceTriangleListIndicis(faces))
+            foreach (var index in faces.GetFaceTriangleListIndicis())
             {
                 yield return corners[index];
             }

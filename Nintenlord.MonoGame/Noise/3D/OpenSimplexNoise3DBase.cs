@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using Nintenlord.MonoGame.Geometry;
 using Nintenlord.MonoGame.Geometry.Fields;
+using Nintenlord.MonoGame.Geometry.Vectors;
 
 namespace Nintenlord.MonoGame.Noise
 {

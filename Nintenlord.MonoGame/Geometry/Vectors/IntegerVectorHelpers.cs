@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Nintenlord.MonoGame.Geometry
+namespace Nintenlord.MonoGame.Geometry.Vectors
 {
     public static class IntegerVectorHelpers
     {
@@ -33,7 +33,7 @@ namespace Nintenlord.MonoGame.Geometry
                 {
                     foreach (var x in xs)
                     {
-                        yield return new IntegerVector3(x,y,z);
+                        yield return new IntegerVector3(x, y, z);
                     }
                 }
             }
@@ -57,7 +57,7 @@ namespace Nintenlord.MonoGame.Geometry
 
         public static IEnumerable<IntegerVector3> GetRectX(int x, Rectangle rect)
         {
-            foreach (var (y,z) in rect.GetPoints())
+            foreach (var (y, z) in rect.GetPoints())
             {
                 yield return new IntegerVector3(x, y, z);
             }
@@ -267,7 +267,7 @@ namespace Nintenlord.MonoGame.Geometry
                 return 1;//We say this means a single cube
             }
 
-            int faceRadius = (2 * radius - 3);
+            int faceRadius = 2 * radius - 3;
             return 8 //Corners
                 + 12 * faceRadius //Edges
                 + 6 * faceRadius * faceRadius; //Faces

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace Nintenlord.MonoGame.Geometry
+namespace Nintenlord.MonoGame.Geometry.Vectors
 {
     public static class PolarCoordinateHelper
     {

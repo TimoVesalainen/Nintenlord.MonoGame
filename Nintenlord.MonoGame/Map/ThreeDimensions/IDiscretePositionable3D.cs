@@ -1,4 +1,4 @@
-﻿using Nintenlord.MonoGame.Geometry;
+﻿using Nintenlord.MonoGame.Geometry.Vectors;
 
 namespace Nintenlord.MonoGame.Map.ThreeDimensions
 {

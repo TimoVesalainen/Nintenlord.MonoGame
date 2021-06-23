@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Nintenlord.MonoGame.Geometry
+namespace Nintenlord.MonoGame.Geometry.Vectors
 {
     public sealed class IntegerVectorEqualityComparer : IEqualityComparer<IntegerVector3>
     {
@@ -18,7 +18,7 @@ namespace Nintenlord.MonoGame.Geometry
             int zHash = obj.Z & 0x1F;
 
             //z = 5 bits, y, x = 13
-            return zHash | (yHash << 5) | (xHash << (5 + 13));
+            return zHash | yHash << 5 | xHash << 5 + 13;
         }
 
         #endregion

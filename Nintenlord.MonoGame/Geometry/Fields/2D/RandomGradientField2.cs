@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Nintenlord.MonoGame.Geometry.Vectors;
 using System;
 
 namespace Nintenlord.MonoGame.Geometry.Fields

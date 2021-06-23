@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Nintenlord.MonoGame.Geometry
+namespace Nintenlord.MonoGame.Geometry.Cubes
 {
     [Flags]
     public enum BlockCorner

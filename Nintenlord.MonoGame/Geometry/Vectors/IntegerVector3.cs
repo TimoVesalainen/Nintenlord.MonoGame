@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace Nintenlord.MonoGame.Geometry
+namespace Nintenlord.MonoGame.Geometry.Vectors
 {
     [DataContract]
     [DebuggerDisplay("[{X},{Y},{Z}]")]
@@ -100,7 +100,7 @@ namespace Nintenlord.MonoGame.Geometry
             var x = Math.Sign(a.X);
             var y = Math.Sign(a.Y);
             var z = Math.Sign(a.Z);
-            return new IntegerVector3(x,y,z);
+            return new IntegerVector3(x, y, z);
         }
 
         public static IntegerVector3 Abs(in IntegerVector3 a)
