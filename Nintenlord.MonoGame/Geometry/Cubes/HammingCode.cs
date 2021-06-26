@@ -12,6 +12,15 @@ namespace Nintenlord.MonoGame.Geometry.Cubes
 
         public HammingCode(int buffer, int dimensions)
         {
+            if (dimensions <= 0)
+            {
+                throw new ArgumentException(nameof(dimensions));
+            }
+            if (buffer >= (1 << dimensions) || buffer < 0)
+            {
+                throw new ArgumentException(nameof(buffer));
+            }
+
             this.buffer = buffer;
             this.dimensions = dimensions;
         }
