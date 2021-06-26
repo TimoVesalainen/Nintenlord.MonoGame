@@ -35,7 +35,7 @@ namespace Nintenlord.MonoGame.Geometry.Cubes
 
         public HammingCode GetOpposite()
         {
-            var mask = (1 << dimensions + 1) - 1;
+            var mask = (1 << dimensions) - 1;
             return new HammingCode(buffer ^ mask, dimensions);
         }
 
