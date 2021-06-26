@@ -10,6 +10,8 @@ namespace Nintenlord.MonoGame.Geometry.Cubes
         readonly int buffer;
         readonly int dimensions;
 
+        public int Index => buffer;
+
         public HammingCode(int buffer, int dimensions)
         {
             if (dimensions <= 0)
