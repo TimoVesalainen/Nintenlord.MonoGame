@@ -57,6 +57,16 @@ namespace Nintenlord.MonoGame.Geometry.Cubes
                 other.buffer == buffer;
         }
 
+        public static bool operator ==(HammingCode code1, HammingCode code2)
+        {
+            return code1.Equals(code2);
+        }
+
+        public static bool operator !=(HammingCode code1, HammingCode code2)
+        {
+            return !code1.Equals(code2);
+        }
+
         public override bool Equals(object obj)
         {
             return obj is HammingCode code && Equals(code);
