@@ -35,6 +35,18 @@ namespace Nintenlord.MonoGame.Geometry.Cubes
             }
         }
 
+        public IEnumerable<HammingCode> GetLargerNeighbors()
+        {
+            for (int i = 0; i < dimensions; i++)
+            {
+                var setBit = new HammingCode(buffer | (1 << i), dimensions);
+                if (setBit != this)
+                {
+                    yield return setBit;
+                }
+            }
+        }
+
         public HammingCode GetOpposite()
         {
             var mask = (1 << dimensions) - 1;
