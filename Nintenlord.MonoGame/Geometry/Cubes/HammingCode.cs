@@ -31,7 +31,7 @@ namespace Nintenlord.MonoGame.Geometry.Cubes
         {
             for (int i = 0; i < dimensions; i++)
             {
-                yield return new HammingCode(buffer | 1 << i, dimensions);
+                yield return new HammingCode(buffer ^ (1 << i), dimensions);
             }
         }
 
