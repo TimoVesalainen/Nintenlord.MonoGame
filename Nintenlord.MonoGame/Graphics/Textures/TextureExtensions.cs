@@ -41,7 +41,7 @@ namespace Nintenlord.MonoGame.Graphics.Textures
 
         public static void SaveMipmapLevels(this Texture2D texture, GraphicsDevice device, Func<int, string> filenameGenerator = null)
         {
-            filenameGenerator = filenameGenerator ?? (i => $"level_{i}.png");
+            filenameGenerator ??= (i => $"level_{i}.png");
 
             var width = texture.Width;
             var height = texture.Height;
