@@ -124,13 +124,7 @@ namespace Nintenlord.MonoGame.Geometry
 
         public override int GetHashCode()
         {
-            int result = 0;
-            result |= (int)X & 0xFF;
-            result |= ((int)Y & 0xFF) << 8;
-            result |= ((int)Width & 0xFF) << 16;
-            result |= ((int)Height & 0xFF) << 24;
-
-            return result;
+            return HashCode.Combine(X,Y, Width, Height);
         }
 
 

@@ -450,10 +450,7 @@ namespace Nintenlord.MonoGame.Geometry.Vectors
 
         public override int GetHashCode()
         {
-            const int mask = 0x3FF;
-            const int shift = 10;
-
-            return X & mask | (Y & mask) << shift | (Z & mask) << shift * 2;
+            return HashCode.Combine(X, Y, Z);
         }
 
         public override string ToString()
