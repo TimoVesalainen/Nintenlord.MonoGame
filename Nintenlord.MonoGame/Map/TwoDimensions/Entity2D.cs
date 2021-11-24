@@ -82,6 +82,11 @@ namespace Nintenlord.MonoGame.Map.TwoDimensions
             base.Update(gameTime);
         }
 
+        protected void OnMoved(Moved2DEventArgs args)
+        {
+            Moved?.Invoke(this, args);
+        }
+
         protected abstract TEnumerable GetSheets();
 
         public override void Draw(GameTime gameTime)
