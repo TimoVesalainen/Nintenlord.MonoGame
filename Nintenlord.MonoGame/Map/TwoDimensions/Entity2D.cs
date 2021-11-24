@@ -28,6 +28,8 @@ namespace Nintenlord.MonoGame.Map.TwoDimensions
 
         public event EventHandler<Moved2DEventArgs> Moved;
 
+        public TState State => state;
+
         protected Entity2D(TGame game, IStateMachine<TState, TCommand> stateMachine, string[] textures) : base(game)
         {
             if (game is null)
