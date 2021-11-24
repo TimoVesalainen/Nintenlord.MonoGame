@@ -62,7 +62,7 @@ namespace Nintenlord.MonoGame.Geometry
             }
         }
 
-        public static RectangleF Empty { get; private set; }
+        public static RectangleF Empty { get; }
 
         public bool Equals(RectangleF other)
         {
@@ -124,7 +124,7 @@ namespace Nintenlord.MonoGame.Geometry
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(X,Y, Width, Height);
+            return HashCode.Combine(X, Y, Width, Height);
         }
 
 
