@@ -40,5 +40,10 @@ namespace Nintenlord.MonoGame.Graphics.Sprites
 
             return sheet.ToBasicTileSet(content);
         }
+
+        public static void Draw(this SpriteBatch batch, Texture2D texture, Sheet sheet)
+        {
+            batch.Draw(texture, sheet.DestinationRectangle, sheet.SourceRectangle, sheet.Color, sheet.Rotation, sheet.Origin, sheet.Effects, sheet.LayerDepth);
+        }
     }
 }
