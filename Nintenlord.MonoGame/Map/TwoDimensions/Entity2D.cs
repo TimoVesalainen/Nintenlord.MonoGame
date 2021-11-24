@@ -20,9 +20,9 @@ namespace Nintenlord.MonoGame.Map.TwoDimensions
 
         TState state;
 
-        abstract public RectangleF BoundingRectangle { get; }
+        public abstract RectangleF BoundingRectangle { get; }
 
-        abstract public Vector2 Position { get; }
+        public abstract Vector2 Position { get; }
 
         protected abstract SpriteBatch SpriteBatch { get; }
 
