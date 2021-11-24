@@ -219,6 +219,11 @@ namespace Nintenlord.MonoGame.Geometry
             return true;
         }
 
+        public static Rectangle ToRectangle(RectangleF a)
+        {
+            return new Rectangle((int)a.X, (int)a.Y, (int)a.Width, (int)a.Height);
+        }
+
 
         public static bool operator ==(RectangleF a, RectangleF b)
         {
@@ -240,6 +245,11 @@ namespace Nintenlord.MonoGame.Geometry
         {
             Or(ref a, ref b, out RectangleF result);
             return result;
+        }
+
+        public static explicit operator Rectangle(RectangleF a)
+        {
+            return ToRectangle(a);
         }
 
         public static RectangleF And(IEnumerable<RectangleF> list)
