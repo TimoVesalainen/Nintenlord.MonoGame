@@ -23,7 +23,7 @@ namespace Nintenlord.MonoGame.Debug
         {
             base.Initialize();
             logger = this.MyGame.Services.GetService<ILogger>();
-            debug = this.MyGame.GraphicsDevice.GraphicsDebug;
+            debug = this.MyGame.GraphicsDevice.GraphicsDebug ?? throw new InvalidOperationException("Can't get GraphicsDebug from GraphicsDevice");
         }
 
         public override void Update(GameTime gameTime)
