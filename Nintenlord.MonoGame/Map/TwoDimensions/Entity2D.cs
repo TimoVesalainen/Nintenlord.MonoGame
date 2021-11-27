@@ -69,6 +69,7 @@ namespace Nintenlord.MonoGame.Map.TwoDimensions
 
         public override void Update(GameTime gameTime)
         {
+            var oldPosition = Position;
             foreach (var command in gottenCommands)
             {
                 this.state = stateMachine.Transition(this.state, command);
@@ -80,6 +81,11 @@ namespace Nintenlord.MonoGame.Map.TwoDimensions
             }
             gottenCommands.Clear();
             base.Update(gameTime);
+
+            if (oldPosition != Position)
+            {
+                OnMoved(new Moved2DEventArgs(oldPosition, Position));
+            }
         }
 
         protected void OnMoved(Moved2DEventArgs args)
