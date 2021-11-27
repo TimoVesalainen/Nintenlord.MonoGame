@@ -13,6 +13,8 @@ namespace Nintenlord.MonoGame.Games
         private TState currentState;
         private IGameComponent currentComponent;
 
+        public TState CurrentState => currentState;
+
         public StateMachineComponentManager(IStateMachine<TState, TInput> stateMachine, GameComponentCollection gameComponents, Func<TState, IGameComponent> component)
         {
             this.stateMachine = stateMachine ?? throw new ArgumentNullException(nameof(stateMachine));
