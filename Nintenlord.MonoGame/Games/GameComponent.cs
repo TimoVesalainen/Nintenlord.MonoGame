@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace Nintenlord.MonoGame.Games
 {
@@ -7,6 +8,11 @@ namespace Nintenlord.MonoGame.Games
     {
         public GameComponent(TGame game) : base(game)
         {
+            if (game is null)
+            {
+                throw new ArgumentNullException(nameof(game));
+            }
+
             MyGame = game;
         }
 

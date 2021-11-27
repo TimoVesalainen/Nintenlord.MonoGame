@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace Nintenlord.MonoGame.Graphics
 {
@@ -10,6 +11,11 @@ namespace Nintenlord.MonoGame.Graphics
         public DrawableGameComponent(TGame game)
             : base(game)
         {
+            if (game is null)
+            {
+                throw new ArgumentNullException(nameof(game));
+            }
+
             MyGame = game;
         }
     }
