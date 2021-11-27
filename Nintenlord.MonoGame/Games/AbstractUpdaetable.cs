@@ -42,18 +42,12 @@ namespace Nintenlord.MonoGame.Games
 
         private void OnUpdateOrderChanged()
         {
-            if (UpdateOrderChanged != null)
-            {
-                UpdateOrderChanged(this, EventArgs.Empty);
-            }
+            UpdateOrderChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnEnabledChanged()
         {
-            if (EnabledChanged != null)
-            {
-                EnabledChanged(this, EventArgs.Empty);
-            }
+            EnabledChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public event EventHandler<EventArgs> UpdateOrderChanged;
