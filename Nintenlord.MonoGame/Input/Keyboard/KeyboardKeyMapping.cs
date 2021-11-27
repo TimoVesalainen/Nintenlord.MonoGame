@@ -14,7 +14,7 @@ namespace Nintenlord.MonoGame.Input.Keyboard
             controls[key] = control;
         }
 
-        public IEnumerable<TControl> GetCurrent()
+        public IEnumerable<TControl> GetCommands()
         {
             KeyboardState keyState = GameKeyboard.GetState();
             foreach (var (key, control) in controls)

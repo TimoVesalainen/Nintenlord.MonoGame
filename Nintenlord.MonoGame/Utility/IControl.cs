@@ -4,6 +4,6 @@ namespace Nintenlord.MonoGame.Utility
 {
     public interface IControl<TControl>
     {
-        IEnumerable<TControl> GetCurrent();
+        IEnumerable<TControl> GetCommands();
     }
 }
