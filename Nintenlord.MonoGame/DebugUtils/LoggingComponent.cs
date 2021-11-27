@@ -58,7 +58,9 @@ namespace Nintenlord.MonoGame.DebugUtils
 
             builder.AppendJoin("\n", logger.Lines);
 
+            batch.Begin(SpriteSortMode.Immediate);
             batch.DrawString(font, builder, position, textColor);
+            batch.End();
         }
 
         private sealed class Logger : ILogger
