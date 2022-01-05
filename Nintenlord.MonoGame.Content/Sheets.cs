@@ -2,7 +2,7 @@
 {
     public class Sheets
     {
-        public string bitmap { get; set; }
-        public Sheet[] sheets { get; set; }
+        public string Bitmap { get; set; }
+        public Sheet[] SheetList { get; set; }
     }
 }

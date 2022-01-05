@@ -11,11 +11,11 @@ namespace Nintenlord.MonoGame.Graphics.Sprites
     {
         public static DictionarySpriteSheet<T> ToDictionarySpriteSheet<T>(this Sheets sheets, ContentManager content, Func<string, T> sheetNameParser)
         {
-            var texture = content.Load<Texture2D>(sheets.bitmap);
+            var texture = content.Load<Texture2D>(sheets.Bitmap);
 
-            var dict = sheets.sheets.ToDictionary(
-                sheet => sheetNameParser(sheet.name),
-                sheet => new Rectangle(sheet.x, sheet.y, sheet.width, sheet.height));
+            var dict = sheets.SheetList.ToDictionary(
+                sheet => sheetNameParser(sheet.Name),
+                sheet => new Rectangle(sheet.X, sheet.Y, sheet.Width, sheet.Height));
 
             return new DictionarySpriteSheet<T>(dict, texture);
         }

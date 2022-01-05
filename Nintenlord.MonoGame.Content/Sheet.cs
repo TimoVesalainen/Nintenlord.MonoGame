@@ -2,10 +2,10 @@
 {
     public class Sheet
     {
-        public string name { get; set; }
-        public int x { get; set; }
-        public int y { get; set; }
-        public int width { get; set; }
-        public int height { get; set; }
+        public string Name { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
     }
 }
