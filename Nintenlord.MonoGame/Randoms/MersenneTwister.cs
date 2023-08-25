@@ -139,7 +139,7 @@ namespace Nintenlord.MonoGame.Randoms
         {
             if (initKey == null)
             {
-                throw new ArgumentNullException("initKey");
+                throw new ArgumentNullException(nameof(initKey));
             }
 
             var initArray = new uint[initKey.Length];

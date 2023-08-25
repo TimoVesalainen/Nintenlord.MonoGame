@@ -52,7 +52,7 @@ namespace Nintenlord.MonoGame.Geometry
 
         public static void ForEachPoint<T>(this Rectangle r, T[,] grid, Func<int, int, T> func)
         {
-            int widht = grid.GetLength(0);
+            _ = grid.GetLength(0);
 
             for (int j = r.Top; j < r.Bottom; j++)
             {

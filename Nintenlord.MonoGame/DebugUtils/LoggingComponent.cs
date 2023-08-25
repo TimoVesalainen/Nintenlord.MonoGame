@@ -90,7 +90,7 @@ namespace Nintenlord.MonoGame.DebugUtils
             {
                 while (lines.Count > lineCount)
                 {
-                    if (!lines.TryDequeue(out var t))
+                    if (!lines.TryDequeue(out _))
                     {
                         throw new Exception("Shouldn't happen");
                     }
