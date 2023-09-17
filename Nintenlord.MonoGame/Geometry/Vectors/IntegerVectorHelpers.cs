@@ -4,7 +4,6 @@ using Nintenlord.Numerics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Nintenlord.MonoGame.Geometry.Vectors
 {

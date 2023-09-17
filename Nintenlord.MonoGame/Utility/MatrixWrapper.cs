@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Nintenlord.Matricis;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nintenlord.MonoGame.Utility
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Nintenlord.MonoGame.Geometry.Fields._2D
+﻿namespace Nintenlord.MonoGame.Geometry.Fields._2D
 {
     public sealed class FiniteSupportField2<T> : IField2i<T>
     {

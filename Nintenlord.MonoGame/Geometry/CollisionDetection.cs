@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Nintenlord.Utility.Primitives;
 using System;
 
 namespace Nintenlord.MonoGame.Geometry

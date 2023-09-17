@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Nintenlord.MonoGame.Randoms
+﻿namespace Nintenlord.MonoGame.Randoms
 {
     /// <summary>
     /// Random number generator adopted from:

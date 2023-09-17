@@ -2,7 +2,6 @@
 using Nintenlord.MonoGame.Geometry.Vectors;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Nintenlord.MonoGame.Geometry
 {
