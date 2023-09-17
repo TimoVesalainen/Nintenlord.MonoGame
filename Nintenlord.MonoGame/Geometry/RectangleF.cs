@@ -110,6 +110,12 @@ namespace Nintenlord.MonoGame.Geometry
                    value.Y >= Y && value.Y < Y + Height;
         }
 
+        public bool Contains(RectangleF value)
+        {
+            return value.X >= X && value.X + value.Width <= X + Width &&
+                   value.Y >= Y && value.Y + value.Height <= Y + Height;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is RectangleF)
@@ -273,6 +279,17 @@ namespace Nintenlord.MonoGame.Geometry
         public static RectangleF Or(IEnumerable<RectangleF> list)
         {
             return list.Aggregate(Empty, (current, item) => current | item);
+        }
+
+        public static IEnumerable<RectangleF> GetQuadrants(RectangleF area)
+        {
+            var width = area.Width / 2;
+            var height = area.Height / 2;
+
+            yield return new RectangleF(area.X + width, area.Y + height, width, height);
+            yield return new RectangleF(area.X, area.Y + height, width, height);
+            yield return new RectangleF(area.X, area.Y, width, height);
+            yield return new RectangleF(area.X + width, area.Y, width, height);
         }
     }
 }
