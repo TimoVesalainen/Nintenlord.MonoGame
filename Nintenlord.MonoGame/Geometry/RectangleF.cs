@@ -291,5 +291,13 @@ namespace Nintenlord.MonoGame.Geometry
             yield return new RectangleF(area.X, area.Y, width, height);
             yield return new RectangleF(area.X + width, area.Y, width, height);
         }
+
+        public RectangleQuadrant GetQuadrant(Vector2 position)
+        {
+            var isLeft = position.X < X + Width / 2;
+            var isTop = position.Y < Y + Height / 2;
+
+            return RectangleQuadrantHelpers.GetQuadrant(isLeft, isTop);
+        }
     }
 }
