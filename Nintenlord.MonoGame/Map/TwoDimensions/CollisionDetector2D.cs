@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Nintenlord.MonoGame.Map.TwoDimensions
 {
-    public sealed class CollisionDetector2D<TGame> : GameComponent<TGame> where TGame : Game
+    public sealed class CollisionDetector2D<TGame> : GameComponent<TGame>, ICollisionDetector2D where TGame : Game
     {
         readonly List<ICollidable2D> xCoordSorted = new();
         readonly IComparer<ICollidable2D> xCoordComparer;
